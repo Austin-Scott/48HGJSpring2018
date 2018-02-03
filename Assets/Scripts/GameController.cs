@@ -32,7 +32,9 @@ public class GameController : MonoBehaviour {
 	public static Card CreateCard(System.Type cardType) {
 		if (cardType == typeof(CardSlash)) {
 			return Instantiate(gameController.cards[0]) as CardSlash;
-		} else {
+		} 
+        else
+        {
 			Debug.LogError("Card does not exits");
 			return null;
 		}
