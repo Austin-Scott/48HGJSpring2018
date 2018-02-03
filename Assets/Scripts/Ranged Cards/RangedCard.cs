@@ -12,7 +12,8 @@ public abstract class RangedCard : Card {
 
 	public abstract void UpdateDamageText();
 
-	protected override void Awake() {
+	public override void Initialize(Character holder, Character target) {
+		base.Initialize(holder, target);
 		UpdateRangedCardDamageText += UpdateDamageText;
 		UpdateDamageText();
 	}

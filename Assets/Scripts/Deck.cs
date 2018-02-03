@@ -29,10 +29,17 @@ public class Deck {
 	public IEnumerator PositionDeck(Vector3 position) {
 		Coroutine[] movementCoroutines = new Coroutine[cards.Count];
 		for (int i = 0; i < cards.Count; i++) {
-			movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].LerpPosition(position + new Vector3(0f, 0.1f * i, 0f)));
+			movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].SmoothMove(position + new Vector3(0f, 0.1f * i, 0f)));
 		}
 		foreach (Coroutine coroutine in movementCoroutines) {
 			yield return coroutine;
+		}
+	}
+
+	/// Sets the cards firendy and target properties.
+	public void Initialize(Character holder, Character target) {
+		foreach (Card card in cards) {
+			card.Initialize(holder, target);
 		}
 	}
 }

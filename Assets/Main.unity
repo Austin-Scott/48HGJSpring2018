@@ -203,15 +203,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4590271293465230, guid: e4fe04ebde17e9b4786b87c9ca3f3324, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0.4493916
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4590271293465230, guid: e4fe04ebde17e9b4786b87c9ca3f3324, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.7345457
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4590271293465230, guid: e4fe04ebde17e9b4786b87c9ca3f3324, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0.3832271
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4590271293465230, guid: e4fe04ebde17e9b4786b87c9ca3f3324, type: 2}
       propertyPath: m_LocalRotation.x
@@ -340,4 +340,48 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2043116444
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1589841279336656, guid: e4fe04ebde17e9b4786b87c9ca3f3324,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 2043116446}
+  - component: {fileID: 2043116445}
+  m_Layer: 0
+  m_Name: Phase Slot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &2043116445
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65288992908723416, guid: e4fe04ebde17e9b4786b87c9ca3f3324,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2043116444}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.5, y: 1, z: 4.5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &2043116446
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4590271293465230, guid: e4fe04ebde17e9b4786b87c9ca3f3324,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2043116444}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 9.09}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

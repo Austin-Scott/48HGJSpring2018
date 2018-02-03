@@ -14,6 +14,6 @@ public class CardSlash : MeleeCard {
 	}
 
 	public override void UpdateDamageText() {
-		text.text = "Deal (" + CalculateDamage(1) + ") damage. Deal 2 additional damage to health.";
+		text.text = "Deal (" + CalculateDamage(1) + ") damage.\nDeal 2 additional \ndamage to health.";
 	}
 }
