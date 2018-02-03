@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+enum CardType {
+	Melee,
+	Ranged,
+	Defense,
+	White,
+	Black
+};
+
 public abstract class Card : MonoBehaviour {
 
 	public abstract IEnumerator Use();
@@ -9,15 +17,17 @@ public abstract class Card : MonoBehaviour {
 	/// Number of phases a card executes over.
 	protected int cost;
 
+	CardType cardType;
+
 	/// Text mesh of the title.
 	[SerializeField]
-	TextMesh titleText;
+	protected TextMesh titleText;
 	/// Text mesh of the cost display.
 	[SerializeField]
-	TextMesh costText;
+	protected TextMesh costText;
 	/// Text mesh of the text.
 	[SerializeField]
-	TextMesh text;
+	protected TextMesh text;
 
 	/// The character using the card
 	protected Character holder { get; private set; }
@@ -29,33 +39,42 @@ public abstract class Card : MonoBehaviour {
 	// 	//TODO move card closer to player infront of all other game elements.
 	// }
 
-	// public virtual IEnumerator Destroy() {
-		
-	// }
-
-	// /// Sets a card on the board during the planning phase.
-	// public virtual IEnumerator Set(int phaseIndex) {
-
-	// }
-
-	public IEnumerator LerpTransform (Transform desiredTransform) {
-		while (transform != desiredTransform) {
-			float deltaTime = Time.deltaTime;
-			transform.rotation = Quaternion.Lerp(transform.rotation, desiredTransform.rotation, deltaTime);
-			transform.position = Vector3.Lerp(transform.position, desiredTransform.position, deltaTime);
-			transform.localScale = Vector3.Lerp(transform.localScale, desiredTransform.localScale, deltaTime);
-			yield return null;
-		}
-		Debug.Log("There");
+	public virtual IEnumerator Destroy() {
+		Destroy(gameObject);
+		yield break; //TODO destruction animation	
 	}
 
-	public IEnumerator LerpPosition (Vector3 desiredPosition) {
+	/// Slerps the card's transofrm to a given transform over time. Speed of 1 is default.
+	public IEnumerator LerpTransform (Transform desiredTransform, float speed = 1f) {
+		while (transform != desiredTransform) {
+			float deltaTime = Time.deltaTime * 5f * speed;
+			transform.rotation = Quaternion.Slerp(transform.rotation, desiredTransform.rotation, deltaTime);
+			transform.position = Vector3.Slerp(transform.position, desiredTransform.position, deltaTime);
+			transform.localScale = Vector3.Slerp(transform.localScale, desiredTransform.localScale, deltaTime);
+			yield return null;
+		}
+	}
+
+	/// Moves the card to a certain position over time. Speed of 1 is default.
+	public IEnumerator LerpPosition (Vector3 desiredPosition, float speed = 1f) {
 		while (transform.position != desiredPosition) {
-			float deltaTime = Time.deltaTime*5;
+			float deltaTime = Time.deltaTime * 5 * speed;
 			transform.position = Vector3.Slerp(transform.position, desiredPosition, deltaTime);
 			yield return null;
 		}
-		Debug.Log("There");
+		
+	}
+
+	public IEnumerator Flip(float speed = 1f) {
+		yield break;
+	}
+
+	protected virtual void Awake() {
+
+	}
+
+	protected virtual void Start() {
+
 	}
 	
 }
