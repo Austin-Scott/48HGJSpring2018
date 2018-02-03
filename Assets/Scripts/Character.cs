@@ -85,8 +85,9 @@ public class Character : MonoBehaviour {
 		return DamageToHealth(damage);
 	}
 
-	/// Called only when the character has no shields up.
-	bool DamageToHealth(int damage) {
+	/// Called only when the character has no shields up or is hit by an undodgable attack
+	public bool DamageToHealth(int damage) {
+        //TODO: Interupt channel cards
 		if (board.HasCard(typeof(CardAdrenalineRush), this)) {
 			IncreaseStrength(2);
 		}

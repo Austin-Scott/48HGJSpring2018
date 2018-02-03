@@ -14,7 +14,7 @@ public class DexterityBuff : Buff {
 		Board.endTurn += Revert;
 	}
 
-	void Revert () {
+	public override void Revert () {
 		character.IncreaseDexterity(-amount);
 		Board.endTurn -= Revert;
 	}

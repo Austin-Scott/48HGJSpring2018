@@ -5,7 +5,7 @@ using UnityEngine;
 public class CardTerrify : Card {
 
 	public override IEnumerator Use() {
-        //TODO: Add a scared to opponents hand
-		return null;
+        yield return target.AddCard(GameController.CreateCard(typeof(CardTerrify)));
+        yield break;
 	}
 }

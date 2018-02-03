@@ -5,7 +5,7 @@ using UnityEngine;
 public class CardAim : Card {
 
 	public override IEnumerator Use() {
-        //TODO: Gain 3 Dexterity for the next phase only
+        new DexterityBuff(3, holder);
         return null;
 	}
 }

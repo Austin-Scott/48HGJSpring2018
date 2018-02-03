@@ -5,16 +5,14 @@ using UnityEngine;
 public class CardBuckshot : RangedCard {
 
 	public override IEnumerator Use() {
-        //TODO: make damage to be of type ranged
-        target.Damage(1);
-        target.Damage(1);
-        target.Damage(1);
-        target.Damage(1);
-        //TODO: add reload to holder's hand
-		return null;
+        target.Damage(CalculateDamage(1));
+        target.Damage(CalculateDamage(1));
+        target.Damage(CalculateDamage(1));
+        yield return holder.AddCard(GameController.CreateCard(typeof(CardReload)));
+        yield break;
 	}
 
 	public override void UpdateDamageText() {
-		//TODO
+        text.text = "Deal (" + CalculateDamage(1) + ") ranged damage 3 times. Adds a reload to your hand.";
 	}
 }

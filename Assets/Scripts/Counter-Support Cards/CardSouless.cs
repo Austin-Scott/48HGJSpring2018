@@ -5,7 +5,7 @@ using UnityEngine;
 public class CardSouless : Card {
 
 	public override IEnumerator Use() {
-        //TODO: Cannot sell soul when this is in your hand
+        //Does nothing except exist
 		return null;
 	}
 }

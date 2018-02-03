@@ -5,7 +5,7 @@ using UnityEngine;
 public class CardPrayer : Card {
 
 	public override IEnumerator Use() {
-        //TODO: Add a choosen one to your hand
-		return null;
+        yield return holder.AddCard(GameController.CreateCard(typeof(CardReload)));
+        yield break;
 	}
 }

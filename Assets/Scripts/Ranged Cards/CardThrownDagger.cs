@@ -5,13 +5,12 @@ using UnityEngine;
 public class CardThrownDagger : RangedCard {
 
 	public override IEnumerator Use() {
-        //TODO: make damage to be of type ranged
-        target.Damage(3);
-        //TODO: Destroy this card
+        target.Damage(CalculateDamage(3));
+        DestroyAtEndOfTurn();
 		return null;
 	}
 
 	public override void UpdateDamageText() {
-		//TODO
+        text.text = "Deals (" + CalculateDamage(3) + ") ranged damage. Card is destroyed.";
 	}
 }

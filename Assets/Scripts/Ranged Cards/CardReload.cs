@@ -5,7 +5,8 @@ using UnityEngine;
 public class CardReload : Card {
 
 	public override IEnumerator Use() {
-        //TODO: make the holder unable to use ranged attacks while this is in hand
+        //This card simply exists to be destroyed at the end of a turn
+        DestroyAtEndOfTurn();
 		return null;
 	}
 
