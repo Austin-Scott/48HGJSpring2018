@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour {
 
 	/// Array of all cards in the game.
-	Card[] cards;
+	Card[] cards = new Card[1];
 	/// Prefab for a board
 	Board boardPrefab;
 	/// Prefab for a character
@@ -16,14 +16,16 @@ public class GameController : MonoBehaviour {
 	/// Load resources
 	void Awake() {
 		gameController = this;
-		//Resources.load all cards
+		cards[0] = Resources.Load("Cards/CardSlash", typeof(CardSlash)) as CardSlash;
+		boardPrefab = Resources.Load("Board", typeof(Board)) as Board;
+		characterPrefab = Resources.Load("Character", typeof(Character)) as Character;
 		Shield.SetShieldPrefab(Resources.Load("Shield", typeof(Shield)) as Shield);
 	}
 
 	/// Initialize the game
 	void Start() {
 		currentBoard = Instantiate(boardPrefab);
-		currentBoard.Initialize(Instantiate(characterPrefab), Instantiate(characterPrefab));
+		StartCoroutine(currentBoard.Initialize(Instantiate(characterPrefab), Instantiate(characterPrefab)));
 	}
 
 	/// Creates a card of type
@@ -37,4 +39,8 @@ public class GameController : MonoBehaviour {
 	}
 
 	static GameController gameController;
+
+	public static Coroutine ControllerCoroutine(IEnumerator routine) {
+		return gameController.StartCoroutine(routine);
+	}
 }

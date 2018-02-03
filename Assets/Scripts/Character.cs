@@ -9,6 +9,8 @@ enum DamageType {
 
 public class Character : MonoBehaviour {
 
+	bool player;
+
 	/// The ID of the last character created.
 	public static int lastUsedCharacterID = -1;
 
@@ -58,14 +60,21 @@ public class Character : MonoBehaviour {
 	}
 
 	/// Initializes a character at the beginning of a match.
-	public void Initialize(int health, int strength, int dexterity, Deck deck) {
+	public IEnumerator Initialize(int health, int strength, int dexterity, Deck deck, bool player) {
 		this.health = health;
 		this.strength = strength;
 		this.dexterity = dexterity;
 		this.deck = deck;
+		this.player = player;
 		lastUsedCharacterID ++;
 		characterID = lastUsedCharacterID;
-		// TODO draw hand
+		Vector3 deckPosition;
+		if (player) {
+			deckPosition = new Vector3(10f, 0f, -5f);
+		} else {
+			deckPosition = new Vector3(10f, 0f, 5f);
+		}
+		yield return StartCoroutine(deck.PositionDeck(deckPosition));
 	}
 
 	/// A bunch of functions so we can compare characters together. Important for the board/card dictionary.

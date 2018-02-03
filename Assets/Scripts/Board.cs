@@ -16,11 +16,11 @@ public class Board : MonoBehaviour {
 	/// Enemy
 	Character enemy;
 
-	public void Initialize(Character player, Character enemy) {
+	public IEnumerator Initialize(Character player, Character enemy) {
 		this.player = player;
 		this.enemy = enemy;
-		player.Initialize(15, 0, 0, new Deck(GameController.CreateCard(typeof(CardSlash))));
-		enemy.Initialize(20, 1, 1, null);
+		yield return StartCoroutine(player.Initialize(15, 0, 0, new Deck(GameController.CreateCard(typeof(CardSlash))), true));
+		yield return StartCoroutine(enemy.Initialize(20, 1, 1,  new Deck(GameController.CreateCard(typeof(CardSlash))), false));
 		cardsOnBoard.Add(player, new Card[3]);
 		cardsOnBoard.Add(enemy, new Card[3]);
 		StartCoroutine(player.DrawCard());

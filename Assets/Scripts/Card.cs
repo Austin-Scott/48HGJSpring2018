@@ -10,10 +10,13 @@ public abstract class Card : MonoBehaviour {
 	protected int cost;
 
 	/// Text mesh of the title.
+	[SerializeField]
 	TextMesh titleText;
 	/// Text mesh of the cost display.
+	[SerializeField]
 	TextMesh costText;
 	/// Text mesh of the text.
+	[SerializeField]
 	TextMesh text;
 
 	/// The character using the card
@@ -21,15 +24,6 @@ public abstract class Card : MonoBehaviour {
 
 	/// The character opposite the holder. Target
 	protected Character target { get; private set; }
-
-	void OnEnable() {
-		if (titleText == null || costText == null || text == null ) {
-			TextMesh[] textMeshes = GetComponents<TextMesh>();
-			titleText = textMeshes[0];
-			costText = textMeshes[1];
-			text = textMeshes[2];
-		}
-	}
 
 	// public virtual IEnumerator Hover() {
 	// 	//TODO move card closer to player infront of all other game elements.
@@ -57,8 +51,8 @@ public abstract class Card : MonoBehaviour {
 
 	public IEnumerator LerpPosition (Vector3 desiredPosition) {
 		while (transform.position != desiredPosition) {
-			float deltaTime = Time.deltaTime;
-			transform.position = Vector3.Lerp(transform.position, desiredPosition, deltaTime);
+			float deltaTime = Time.deltaTime*5;
+			transform.position = Vector3.Slerp(transform.position, desiredPosition, deltaTime);
 			yield return null;
 		}
 		Debug.Log("There");

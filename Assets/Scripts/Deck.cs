@@ -25,4 +25,14 @@ public class Deck {
 		cards = new List<Card>();
 		cards.Add(card);
 	}
+
+	public IEnumerator PositionDeck(Vector3 position) {
+		Coroutine[] movementCoroutines = new Coroutine[cards.Count];
+		for (int i = 0; i < cards.Count; i++) {
+			movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].LerpPosition(position + new Vector3(0f, 0.1f * i, 0f)));
+		}
+		foreach (Coroutine coroutine in movementCoroutines) {
+			yield return coroutine;
+		}
+	}
 }
