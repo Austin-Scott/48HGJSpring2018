@@ -11,4 +11,8 @@ public class CardGrab : MeleeCard {
         }
 		return null;
 	}
+
+	public override void UpdateDamageText() {
+		//TODO
+	}
 }

@@ -9,4 +9,8 @@ public class CardHalberdStrike : MeleeCard {
         //TODO: make this attack unable to be blocked
 		return null;
 	}
+
+	public override void UpdateDamageText() {
+		//TODO
+	}
 }

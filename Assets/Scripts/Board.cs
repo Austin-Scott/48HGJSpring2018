@@ -4,6 +4,25 @@ using UnityEngine;
 
 public class Board : MonoBehaviour {
 
+	public static System.Action endTurn;
+	public static System.Action startTurn;
+	public static System.Action endPhase;
+
+	[SerializeField]
+	Transform playerDeckPosition;
+	[SerializeField]
+	Transform enemyDeckPostion;
+	[SerializeField]
+	Transform playerDiscardPosition;
+	[SerializeField]
+	Transform enemyDiscardPosition;
+	// [SerializeField]
+	// Transform viewDrawnCardPosition;
+	[SerializeField]
+	Transform[] playerPhasePositions;
+	[SerializeField]
+	Transform[] enemyPhasePosition;
+
 	/// True when a turn is commecning. If false, the player is in the planning phase, where he can move cards around on the board.
 	public bool running { 
 		get {
@@ -27,6 +46,9 @@ public class Board : MonoBehaviour {
 	Character enemy;
 
 	public IEnumerator Initialize(Character player, Character enemy) {
+		endTurn = null;
+		startTurn = null;
+		endPhase = null;
 		currentPhase = 0;
 		this.player = player;
 		this.enemy = enemy;
@@ -59,7 +81,7 @@ public class Board : MonoBehaviour {
 	}
 
 	/// Sets a card by global index. 0-2 is the players cards while 3-5 represents opponents cards.
-	public bool SetCard(Card card, int phaseIndex, int cardIndex) {
+	public bool AddCard(Card card, int phaseIndex) {
 		Character boardSideOwner;
 		if (phaseIndex > 2) {
 			boardSideOwner = enemy;
@@ -67,12 +89,30 @@ public class Board : MonoBehaviour {
 		} else {
 			boardSideOwner = player;
 		}
-		return SetCard(card, boardSideOwner, cardIndex);
+		return AddCard(card, boardSideOwner, phaseIndex);
 	}
 
 	/// Sets a card by local index, relative to the character that owns the side of the board.
-	public bool SetCard(Card card, Character boardSideOwner, int index) {
-		cardsOnBoard[boardSideOwner][index] = card;
+	public bool AddCard(Card card, Character boardSideOwner, int phaseIndex) {
+		cardsOnBoard[boardSideOwner][phaseIndex].Add(card);
+		return true;
+	}
+
+	/// Removes a card by global index. 0-2 is the players cards while 3-5 represents opponents cards.
+	public bool RemoveCard(Card card, int phaseIndex) {
+		Character boardSideOwner;
+		if (phaseIndex > 2) {
+			boardSideOwner = enemy;
+			phaseIndex -= 3;
+		} else {
+			boardSideOwner = player;
+		}
+		return RemoveCard(card, boardSideOwner, phaseIndex);
+	}
+
+	/// Removes a card by local index, relative to the character that owns the side of the board.
+	public bool RemoveCard(Card card, Character boardSideOwner, int phaseIndex) {
+		cardsOnBoard[boardSideOwner][phaseIndex].Remove(card);
 		return true;
 	}
 
@@ -82,8 +122,10 @@ public class Board : MonoBehaviour {
 			if (!PhaseHasOccured(i + 1)) {
 				continue;
 			}
-			if (GetCard(boardSideOwner, i).GetType() == cardType) {
-				return true;
+			foreach (Card card in cardsOnBoard[boardSideOwner][i]) {
+				if (card.GetType() == cardType) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -104,6 +146,64 @@ public class Board : MonoBehaviour {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	/// Sets up the game board for the next turn's planning phase
+	IEnumerator NextTurn() {
+		currentPhase = 0;
+		// return all cards that where not destroyed to the player's hand.
+		for (int i = 0; i < 3; i++) {
+			foreach (Card card in cardsOnBoard[player][i]) {
+				if (card != null) {
+					yield return StartCoroutine(player.AddCard(card));
+				}
+			}
+			foreach (Card card in cardsOnBoard[enemy][i]) {
+				if (card != null) {
+					yield return StartCoroutine(enemy.AddCard(card));
+				}
+			}
+		}
+		startTurn();
+	}
+
+	/// Ends the planning phase and starts to use the cards.
+	public IEnumerator Commence() {
+		for (int i = 0; i < 3; i++) {
+			yield return CommencePhase(currentPhase);
+			endPhase();
+		}
+		endTurn();
+		StartCoroutine(NextTurn());
+	}
+
+	public IEnumerator CommencePhase(int phaseIndex) {
+		currentPhase++;
+		List<Card> playerCards = cardsOnBoard[player][phaseIndex];
+		List<Card> enemyCards = cardsOnBoard[enemy][phaseIndex];
+		List<Card> attackCards = new List<Card>();
+		List<Card> nonAttackCards = new List<Card>();
+
+		// add all cards to their respective list
+		foreach (Card card in playerCards) {
+			if (card as MeleeCard == null && card as RangedCard == null) {
+				nonAttackCards.Add(card);
+			} else {
+				attackCards.Add(card);
+			}
+		}
+		foreach (Card card in enemyCards) {
+			if (card as MeleeCard == null && card as RangedCard == null) {
+				nonAttackCards.Add(card);
+			} else {
+				attackCards.Add(card);
+			}
+		}
+		
+		nonAttackCards.AddRange(attackCards);
+		foreach (Card card in nonAttackCards) {
+			yield return StartCoroutine(card.Use());
 		}
 	}
 }

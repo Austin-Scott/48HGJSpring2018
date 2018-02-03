@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardPhysicallyFit : MeleeCard {
+public class CardPhysicallyFit : Card {
 
 	public override IEnumerator Use() {
         holder.IncreaseStrength(1);

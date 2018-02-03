@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardSteroids : MeleeCard {
+public class CardSteroids : Card {
 
 	public override IEnumerator Use() {
         holder.IncreaseStrength(3);

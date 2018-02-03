@@ -94,8 +94,8 @@ public class Character : MonoBehaviour {
 
 	/// Called only when the character has no shields up.
 	bool DamageToHealth(int damage) {
-		if (board.HasCard(typeof(CardAdrenalineRush))) {
-			
+		if (board.HasCard(typeof(CardAdrenalineRush), this)) {
+			IncreaseStrength(2);
 		}
 		health -= damage;
 		if (health <= 0) {
@@ -211,18 +211,17 @@ public class Character : MonoBehaviour {
 		if (board.running) {
 			yield break;
 		}
-		board.SetCard(card, this, phaseIndex);
+		board.AddCard(card, this, phaseIndex);
 		hand.Remove(card);
 		//TODO place card animation
 		StartCoroutine(PositionHand());
 	}
 
-	public IEnumerator RemoveCardFromBoard(int phaseIndex) {
+	public IEnumerator RemoveCardFromBoard(Card card, int phaseIndex) {
 		if (board.running) {
 			yield break;
 		}
-		Card card = board.GetCard(this, phaseIndex);
-		board.SetCard(null, this, phaseIndex);
+		board.RemoveCard(card, this, phaseIndex);
 		//TODO remove card animation
 		yield return StartCoroutine(AddCard(card));
 	}

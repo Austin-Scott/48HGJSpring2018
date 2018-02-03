@@ -39,6 +39,14 @@ public abstract class Card : MonoBehaviour {
 	// 	//TODO move card closer to player infront of all other game elements.
 	// }
 
+	public void DestroyAtEndOfTurn() {
+		Board.endTurn += StartDestroyAnimation;
+	}
+
+	public virtual void StartDestroyAnimation() {
+		StartCoroutine(Destroy());
+	}
+
 	public virtual IEnumerator Destroy() {
 		Destroy(gameObject);
 		yield break; //TODO destruction animation	
@@ -51,6 +59,13 @@ public abstract class Card : MonoBehaviour {
 			transform.rotation = Quaternion.Slerp(transform.rotation, desiredTransform.rotation, deltaTime);
 			transform.position = Vector3.Slerp(transform.position, desiredTransform.position, deltaTime);
 			transform.localScale = Vector3.Slerp(transform.localScale, desiredTransform.localScale, deltaTime);
+			if (Quaternion.Angle(transform.rotation, desiredTransform.rotation) < 5f) {
+				transform.rotation = desiredTransform.rotation;
+			}
+			if (Vector3.Distance(transform.position, desiredTransform.position) < 0.1f) {
+				transform.position = desiredTransform.position;
+			}
+			//TODO scale almost finished scaling check (if we decide to use it)
 			yield return null;
 		}
 	}
@@ -60,13 +75,11 @@ public abstract class Card : MonoBehaviour {
 		while (transform.position != desiredPosition) {
 			float deltaTime = Time.deltaTime * 5 * speed;
 			transform.position = Vector3.Slerp(transform.position, desiredPosition, deltaTime);
+			if (Vector3.Distance(transform.position, desiredPosition) < 0.1f) {
+				transform.position = desiredPosition;
+			}
 			yield return null;
 		}
-		
-	}
-
-	public IEnumerator Flip(float speed = 1f) {
-		yield break;
 	}
 
 	protected virtual void Awake() {

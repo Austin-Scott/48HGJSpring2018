@@ -9,4 +9,8 @@ public class CardStab : MeleeCard {
         //TODO: If blocked destroy card
 		return null;
 	}
+
+	public override void UpdateDamageText() {
+		//TODO
+	}
 }

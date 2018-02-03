@@ -13,4 +13,8 @@ public class CardBuckshot : RangedCard {
         //TODO: add reload to holder's hand
 		return null;
 	}
+
+	public override void UpdateDamageText() {
+		//TODO
+	}
 }
