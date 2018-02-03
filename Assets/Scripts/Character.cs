@@ -15,6 +15,7 @@ public class Character : MonoBehaviour {
 	/// Strength of the character. Increases melee attack damage by this value.
 	int strength = 0;
 	public int GetStrength() { return strength; }
+    public void IncreaseStrength(int amount) { strength += amount; }
 
 	/// Dextyerity of the character. Increase magic 
 	int dexterity = 0;
