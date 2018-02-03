@@ -9,4 +9,8 @@ public class CardPunch : MeleeCard {
         //TODO: Lose 2 health if the attack was blocked
 		return null;
 	}
+
+	public override void UpdateDamageText() {
+		//TODO
+	}
 }

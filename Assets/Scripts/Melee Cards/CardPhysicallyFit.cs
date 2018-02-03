@@ -9,4 +9,8 @@ public class CardPhysicallyFit : MeleeCard {
         //TODO: Destroy this card
 		return null;
 	}
+
+	public override void UpdateDamageText() {
+		//TODO
+	}
 }

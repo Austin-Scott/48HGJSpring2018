@@ -8,4 +8,8 @@ public class CardParry : MeleeCard {
         //TODO: Block the next melee attack this turn and deal 3 damage to the attacker
 		return null;
 	}
+
+	public override void UpdateDamageText() {
+		//TODO
+	}
 }

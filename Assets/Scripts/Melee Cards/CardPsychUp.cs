@@ -8,4 +8,8 @@ public class CardPsychUp : MeleeCard {
         holder.IncreaseStrength(3);
 		return null;
 	}
+
+	public override void UpdateDamageText() {
+		//TODO
+	}
 }
