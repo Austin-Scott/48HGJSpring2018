@@ -9,19 +9,21 @@ public class Board : MonoBehaviour {
 	public static System.Action endPhase;
 
 	[SerializeField]
-	Transform playerDeckPosition;
+	public Transform playerDeckPosition;
 	[SerializeField]
-	Transform enemyDeckPostion;
+	public Transform enemyDeckPosition;
 	[SerializeField]
-	Transform playerDiscardPosition;
+	public Transform playerDiscardPosition;
 	[SerializeField]
-	Transform enemyDiscardPosition;
+	public Transform enemyDiscardPosition;
+	[SerializeField]
+	public Transform playerHandPosition;
+	[SerializeField]
+	public Transform enemyHandPosition;
 	// [SerializeField]
 	// Transform viewDrawnCardPosition;
 	[SerializeField]
-	Transform[] playerPhasePositions;
-	[SerializeField]
-	Transform[] enemyPhasePosition;
+	public Transform[] phasePositions;
 
 	/// True when a turn is commecning. If false, the player is in the planning phase, where he can move cards around on the board.
 	public bool running { 
@@ -40,7 +42,7 @@ public class Board : MonoBehaviour {
 	Dictionary<Character, List<Card>[]> cardsOnBoard = new Dictionary<Character, List<Card>[]>();
 
 	/// Player
-	Character player;
+	public static Character player;
 
 	/// Enemy
 	Character enemy;
@@ -50,10 +52,10 @@ public class Board : MonoBehaviour {
 		startTurn = null;
 		endPhase = null;
 		currentPhase = 0;
-		this.player = player;
+		Board.player = player;
 		this.enemy = enemy;
-		yield return StartCoroutine(player.Initialize(15, 0, 0, new Deck(GameController.CreateCard(typeof(CardSlash))), true, enemy));
-		yield return StartCoroutine(enemy.Initialize(20, 1, 1,  new Deck(GameController.CreateCard(typeof(CardSlash))), false, player));
+		yield return StartCoroutine(player.Initialize(15, 0, 0, new Deck(GameController.CreateCard(typeof(CardSlash))), true, enemy, this));
+		yield return StartCoroutine(enemy.Initialize(20, 1, 1,  new Deck(GameController.CreateCard(typeof(CardSlash))), false, player, this));
 		cardsOnBoard.Add(player, new List<Card>[3]);
 		cardsOnBoard.Add(enemy, new List<Card>[3]);
 		for (int i = 0; i < 3; i++) {
@@ -94,6 +96,7 @@ public class Board : MonoBehaviour {
 
 	/// Sets a card by local index, relative to the character that owns the side of the board.
 	public bool AddCard(Card card, Character boardSideOwner, int phaseIndex) {
+		card.onBoard = true;
 		cardsOnBoard[boardSideOwner][phaseIndex].Add(card);
 		return true;
 	}
@@ -112,6 +115,7 @@ public class Board : MonoBehaviour {
 
 	/// Removes a card by local index, relative to the character that owns the side of the board.
 	public bool RemoveCard(Card card, Character boardSideOwner, int phaseIndex) {
+		// card.onBoard = false;
 		cardsOnBoard[boardSideOwner][phaseIndex].Remove(card);
 		return true;
 	}

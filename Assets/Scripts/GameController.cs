@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
-	/// Array of all cards in the game.
-	Card[] cards = new Card[1];
+	Dictionary<System.Type, Card> cardDictionary = new Dictionary<System.Type, Card>();
+
 	/// Prefab for a board
 	Board boardPrefab;
 	/// Prefab for a character
@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour {
 	/// Load resources
 	void Awake() {
 		gameController = this;
-		cards[0] = Resources.Load("Cards/CardSlash", typeof(CardSlash)) as CardSlash;
+		cardDictionary.Add(typeof(CardSlash), Resources.Load("Cards/CardSlash", typeof(CardSlash)) as CardSlash); 
 		boardPrefab = Resources.Load("Board", typeof(Board)) as Board;
 		characterPrefab = Resources.Load("Character", typeof(Character)) as Character;
 		Shield.SetShieldPrefab(Resources.Load("Shield", typeof(Shield)) as Shield);
@@ -30,12 +30,7 @@ public class GameController : MonoBehaviour {
 
 	/// Creates a card of type
 	public static Card CreateCard(System.Type cardType) {
-		if (cardType == typeof(CardSlash)) {
-			return Instantiate(gameController.cards[0]) as CardSlash;
-		} else {
-			Debug.LogError("Card does not exits");
-			return null;
-		}
+		return Instantiate(gameController.cardDictionary[cardType]);
 	}
 
 	static GameController gameController;

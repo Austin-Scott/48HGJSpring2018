@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class PhaseSlot : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+	[SerializeField]
+	Board board;
+
+	[SerializeField]
+	int globalPhaseIndex;
+
+	void OnTriggerStay(Collider other) {
+		if (globalPhaseIndex > 2) {
+			return;
+		}
+		if (Input.GetMouseButtonUp(0)) {
+			Card card = other.GetComponent<Card>();
+			if (card != null) {
+				if (!card.onBoard) {
+					StartCoroutine(card.holder.PlaceCard(card, globalPhaseIndex));
+				}
+			}
+		}
 	}
 }
