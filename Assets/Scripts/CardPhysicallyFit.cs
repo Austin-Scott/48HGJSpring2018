@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardPsychUp : MeleeCard {
+public class CardPhysicallyFit : MeleeCard {
 
 	public override IEnumerator Use() {
-        holder.IncreaseStrength(3);
+        holder.IncreaseStrength(1);
+        //TODO: Destroy this card
 		return null;
 	}
 }

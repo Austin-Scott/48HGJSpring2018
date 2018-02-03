@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardPsychUp : MeleeCard {
+public class CardAim : RangedCard {
 
 	public override IEnumerator Use() {
-        holder.IncreaseStrength(3);
-		return null;
+        //TODO: Gain 3 Dexterity for the next phase only
+        return null;
 	}
 }

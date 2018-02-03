@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardPsychUp : MeleeCard {
+public class CardShowOff : RangedCard {
 
 	public override IEnumerator Use() {
-        holder.IncreaseStrength(3);
+        holder.IncreaseDexterity(1);
+        target.IncreaseDexterity(-1);
 		return null;
 	}
 }

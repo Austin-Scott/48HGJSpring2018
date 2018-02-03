@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardPsychUp : MeleeCard {
+public class CardParry : MeleeCard {
 
 	public override IEnumerator Use() {
-        holder.IncreaseStrength(3);
+        //TODO: Block the next melee attack this turn and deal 3 damage to the attacker
 		return null;
 	}
 }

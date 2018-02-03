@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardPsychUp : MeleeCard {
+public class CardHalberdStrike : MeleeCard {
 
 	public override IEnumerator Use() {
-        holder.IncreaseStrength(3);
+        target.Damage(15);
+        //TODO: make this attack unable to be blocked
 		return null;
 	}
 }

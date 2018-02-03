@@ -20,6 +20,7 @@ public class Character : MonoBehaviour {
 	/// Dextyerity of the character. Increase magic 
 	int dexterity = 0;
 	public int GetDexterity() { return dexterity; }
+    public void IncreaseDexterity(int amount) { dexterity += amount; }
 
 	/// Max number of cards in a players hand.
 	int maxHandSize = 8;

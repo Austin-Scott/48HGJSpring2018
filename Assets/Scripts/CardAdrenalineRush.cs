@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardPsychUp : MeleeCard {
+public class CardAdrenalineRush : MeleeCard {
 
 	public override IEnumerator Use() {
-        holder.IncreaseStrength(3);
+        //TODO: For this turn, each time you take damage gain 2 strength
 		return null;
 	}
 }
