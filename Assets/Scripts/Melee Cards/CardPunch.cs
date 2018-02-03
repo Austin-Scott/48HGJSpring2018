@@ -5,12 +5,15 @@ using UnityEngine;
 public class CardPunch : MeleeCard {
 
 	public override IEnumerator Use() {
-        target.Damage(2);
-        //TODO: Lose 2 health if the attack was blocked
+        target.Damage(CalculateDamage(2));
+        if(target.getTotalShield()>0)
+        {
+            holder.Damage(2);
+        }
 		return null;
 	}
 
 	public override void UpdateDamageText() {
-		//TODO
+        text.text = "Deal (" + CalculateDamage(2) + ") damage. Lose 2 health if blocked.";
 	}
 }

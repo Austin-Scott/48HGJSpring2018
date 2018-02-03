@@ -6,7 +6,7 @@ public class CardOilWeapon : Card {
 
 	public override IEnumerator Use() {
         holder.IncreaseDexterity(3);
-        //TODO: Destroy this card
+        DestroyAtEndOfTurn();
         return null;
 	}
 }

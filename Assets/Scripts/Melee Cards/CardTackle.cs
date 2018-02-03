@@ -5,12 +5,12 @@ using UnityEngine;
 public class CardTackle : MeleeCard {
 
 	public override IEnumerator Use() {
-        //TODO: make this attack unable to be blocked
-        target.Damage(5);
+        target.DamageToHealth(CalculateDamage(5));
+        holder.DamageToHealth(CalculateDamage(5));
 		return null;
 	}
 
 	public override void UpdateDamageText() {
-		//TODO
+        text.text = "Deal (" + CalculateDamage(5) + ") damage to both players. Cannot be blocked.";
 	}
 }

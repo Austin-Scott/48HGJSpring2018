@@ -5,13 +5,12 @@ using UnityEngine;
 public class CardRifleShot : RangedCard {
 
 	public override IEnumerator Use() {
-        //TODO: make damage to be of type ranged
-        target.Damage(5);
-        //TODO: add reload to holder's hand
-		return null;
+        target.Damage(CalculateDamage(5));
+        yield return holder.AddCard(GameController.CreateCard(typeof(CardReload)));
+        yield break;
 	}
 
 	public override void UpdateDamageText() {
-		//TODO
+        text.text = "Deal (" + CalculateDamage(5) + ") ranged damage. Adds a reload to your hand.";
 	}
 }

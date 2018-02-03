@@ -5,13 +5,12 @@ using UnityEngine;
 public class CardLightningBolt : RangedCard {
 
 	public override IEnumerator Use() {
-        //TODO: make damage to be of type ranged
-        target.Damage(7);
-        //TODO: destroy this card
-		return null;
+        target.Damage(CalculateDamage(7));
+        DestroyAtEndOfTurn();
+        return null;
 	}
 
 	public override void UpdateDamageText() {
-		//TODO
+        text.text = "Deal (" + CalculateDamage(7) + ") ranged damage. Card is destroyed.";
 	}
 }

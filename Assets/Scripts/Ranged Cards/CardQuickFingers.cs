@@ -6,7 +6,7 @@ public class CardQuickFingers : Card {
 
         public override IEnumerator Use() {
                 holder.IncreaseDexterity(1);
-                //TODO: Destroy this card
+                DestroyAtEndOfTurn();
                 return null;
         }
 }
