@@ -16,6 +16,12 @@ public class Board : MonoBehaviour {
 	/// current deck of the player
 	Deck playerDeck;
 
+	/// Player
+	Character player;
+
+	/// Enemy
+	Character enemy;
+
 	void Start() {
 		
 	}
