@@ -10,4 +10,8 @@ public class CardThrownDagger : RangedCard {
         //TODO: Destroy this card
 		return null;
 	}
+
+	public override void UpdateDamageText() {
+		//TODO
+	}
 }

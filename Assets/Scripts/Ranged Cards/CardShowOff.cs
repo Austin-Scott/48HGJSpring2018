@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardShowOff : RangedCard {
+public class CardShowOff : Card {
 
 	public override IEnumerator Use() {
         holder.IncreaseDexterity(1);

@@ -9,4 +9,8 @@ public class CardTackle : MeleeCard {
         target.Damage(5);
 		return null;
 	}
+
+	public override void UpdateDamageText() {
+		//TODO
+	}
 }

@@ -8,4 +8,8 @@ public class CardThousandFistStrike : MeleeCard {
         //TODO: For the remaining phases of this turn: deal 1 damage or lose 1 health if blocked
 		return null;
 	}
+
+	public override void UpdateDamageText() {
+		//TODO
+	}
 }

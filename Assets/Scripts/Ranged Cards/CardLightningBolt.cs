@@ -10,4 +10,8 @@ public class CardLightningBolt : RangedCard {
         //TODO: destroy this card
 		return null;
 	}
+
+	public override void UpdateDamageText() {
+		//TODO
+	}
 }
