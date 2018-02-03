@@ -5,8 +5,9 @@ using UnityEngine;
 public class CardIntellectualism : Card {
 
 	public override IEnumerator Use() {
-        //TODO: Draw two cards
-        yield return StartCoroutine(this.Destroy());
+        yield return holder.DrawCard();
+        yield return holder.DrawCard();
+        DestroyAtEndOfTurn();
         yield break;
 	}
 }
