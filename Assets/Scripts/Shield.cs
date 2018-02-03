@@ -8,7 +8,11 @@ public class Shield : MonoBehaviour {
 	Character character;
 
 	/// Amount of damage the shield can absorb before it is destroyed.
-	int shieldAmount;
+	int value;
+
+	public int GetValue() {
+		return value;
+	}
 
 
 	/// Prefab of shield
@@ -17,7 +21,7 @@ public class Shield : MonoBehaviour {
 
 	public static Shield CreateShield(int shieldAmount, Character character) {
 		Shield newShield = Instantiate(shieldPrefab);
-		newShield.shieldAmount = shieldAmount;
+		newShield.value = shieldAmount;
 		newShield.character = character;
 		return newShield;
 	}

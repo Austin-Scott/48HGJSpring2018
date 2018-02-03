@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Board : MonoBehaviour {
 
+	/// True when a turn is commecning. If false, the player is in the planning phase, where he can move cards around on the board.
+	public bool running = false;
+
 	/// Cards currently on the board for the opponent
 	Card[] enemyPhaseCards = new Card[3];
 
