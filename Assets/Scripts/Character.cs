@@ -19,27 +19,9 @@ public class Character : MonoBehaviour {
 
 	/// Health of the character. Duel is over when a character reaches 0 health.
 	int health = 15;
+
+	/// Max health of the character.
     int maxHealth;
-    public void IncreaseHealth(int amount)
-    {
-        if (amount > 0) {
-            if (health + amount < maxHealth)
-            {
-                health += amount;
-            } else
-            {
-                health = maxHealth;
-            }
-        } else
-        {
-            if (health + amount > 0)
-            {
-                health += amount;
-            } else
-            {
-                health = 0;
-            }
-        }
 
 	/// The deck of the character
 	Deck deck;
@@ -78,6 +60,17 @@ public class Character : MonoBehaviour {
 		}
 		return shieldTotal;
 	}
+
+	/// Heal function. idk why its not called that.
+    public void IncreaseHealth(int amount) {
+		if (amount <= 0) {
+			return;
+		}
+		health += amount;
+		if (health > maxHealth) {
+			health = maxHealth;
+		}
+	}
 	
 	/// Generic damage function. Called whenever a card deals damage.
 	public bool Damage(int damage) {
@@ -105,12 +98,13 @@ public class Character : MonoBehaviour {
 	}
 
 	/// Initializes a character at the beginning of a match.
-	public IEnumerator Initialize(int health, int strength, int dexterity, Deck deck, bool player) {
+	public IEnumerator Initialize(int health, int strength, int dexterity, Deck deck, bool player, Character target) {
 		this.health = health;
         this.maxHealth = health;
 		this.strength = strength;
 		this.dexterity = dexterity;
 		this.deck = deck;
+		deck.Initialize(this, target);
 		this.player = player;
 		lastUsedCharacterID ++;
 		characterID = lastUsedCharacterID;
@@ -120,6 +114,7 @@ public class Character : MonoBehaviour {
 		} else {
 			deckPosition = new Vector3(10f, 0f, 5f);
 		}
+		
 		yield return StartCoroutine(deck.PositionDeck(deckPosition));
 	}
 
@@ -174,15 +169,15 @@ public class Character : MonoBehaviour {
 		// if odd number of cards.
 		if (handCount % 2 == 1) {
 			// move middle card to middle of hand
-			movementCoroutines[halfHandCount] = StartCoroutine(hand[halfHandCount].LerpPosition(handLocation));
+			movementCoroutines[halfHandCount] = StartCoroutine(hand[halfHandCount].SmoothMove(handLocation));
 			// fan cards left of the middle card
 			for (int i = halfHandCount - 1; i >= 0; i--) {
-				movementCoroutines[i] = StartCoroutine(hand[i].LerpPosition(handLocation - new Vector3(cardSeperation*(halfHandCount-i), 0f, 0f)));
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothMove(handLocation - new Vector3(cardSeperation*(halfHandCount-i), 0f, 0f)));
 				//TODO rotate the cards to look natural
 			}
 			// fan cards right of the middle card
 			for (int i = halfHandCount + 1; i < handCount; i++) {
-				movementCoroutines[i] = StartCoroutine(hand[i].LerpPosition(handLocation + new Vector3(cardSeperation*(i - halfHandCount), 0f, 0f)));
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothMove(handLocation + new Vector3(cardSeperation*(i - halfHandCount), 0f, 0f)));
 				//TODO rotate the cards to look natural
 			}
 		}
@@ -190,12 +185,12 @@ public class Character : MonoBehaviour {
 		else {
 			// fan cards left of the middle
 			for (int i = halfHandCount - 1; i >= 0; i--) {
-				movementCoroutines[i] = StartCoroutine(hand[i].LerpPosition(handLocation - new Vector3(cardSeperation*(halfHandCount-i), 0f, 0f)));
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothMove(handLocation - new Vector3(cardSeperation*(halfHandCount-i), 0f, 0f)));
 				//TODO rotate the cards to look natural
 			}
 			// fan cards right of the middle
 			for (int i = halfHandCount; i < handCount; i++) {
-				movementCoroutines[i] = StartCoroutine(hand[i].LerpPosition(handLocation + new Vector3(cardSeperation*(i - halfHandCount), 0f, 0f)));
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothMove(handLocation + new Vector3(cardSeperation*(i - halfHandCount), 0f, 0f)));
 				//TODO rotate the cards to look natural
 			}
 		}
