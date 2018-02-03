@@ -42,32 +42,32 @@ public class Board : MonoBehaviour {
 	}
 
 	/// Gets a card by global index. 0-2 is the players cards while 3-5 represents opponents cards.
-	public Card GetCard(int index) {
+	public Card GetCard(int phaseIndex, int cardIndex) {
 		Character boardSideOwner;
-		if (index > 2) {
+		if (phaseIndex > 2) {
 			boardSideOwner = enemy;
-			index -= 3;
+			phaseIndex -= 3;
 		} else {
 			boardSideOwner = player;
 		}
-		return GetCard(boardSideOwner, index);
+		return GetCard(boardSideOwner, phaseIndex, cardIndex);
 	}
 
 	/// Gets a card by local index, relative to the character that owns the side of the board.
-	public Card GetCard(Character boardSideOwner, int Phaseindex, int cardIndex) {
-		return cardsOnBoard[boardSideOwner][Phaseindex][cardIndex];
+	public Card GetCard(Character boardSideOwner, int phaseindex, int cardIndex) {
+		return cardsOnBoard[boardSideOwner][phaseindex][cardIndex];
 	}
 
 	/// Sets a card by global index. 0-2 is the players cards while 3-5 represents opponents cards.
-	public bool SetCard(Card card, int index) {
+	public bool SetCard(Card card, int phaseIndex, int cardIndex) {
 		Character boardSideOwner;
-		if (index > 2) {
+		if (phaseIndex > 2) {
 			boardSideOwner = enemy;
-			index -= 3;
+			phaseIndex -= 3;
 		} else {
 			boardSideOwner = player;
 		}
-		return SetCard(card, boardSideOwner, index);
+		return SetCard(card, boardSideOwner, cardIndex);
 	}
 
 	/// Sets a card by local index, relative to the character that owns the side of the board.
