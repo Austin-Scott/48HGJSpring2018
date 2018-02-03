@@ -4,11 +4,10 @@ using UnityEngine;
 
 public abstract class Card : MonoBehaviour {
 
-	public abstract IEnumerator Play();
 	public abstract IEnumerator Use();
 
 	/// Number of phases a card executes over.
-	int cost;
+	protected int cost;
 
 	/// Text mesh of the title.
 	TextMesh titleText;
@@ -17,8 +16,11 @@ public abstract class Card : MonoBehaviour {
 	/// Text mesh of the title.
 	TextMesh text;
 
-	/// Board the card is a part of.
-	Board board;
+	/// The character using the card
+	protected Character holder { get; private set; }
+
+	/// The character opposite the holder. Target
+	protected Character target { get; private set; }
 
 	// public virtual IEnumerator Hover() {
 	// 	//TODO move card closer to player infront of all other game elements.
@@ -28,8 +30,9 @@ public abstract class Card : MonoBehaviour {
 		
 	// }
 
-	void OnEnable() {
+	// /// Sets a card on the board during the planning phase.
+	// public virtual IEnumerator Set(int phaseIndex) {
 
-	}
+	// }
 	
 }

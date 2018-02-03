@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+enum DamageType {
+	melee,
+	ranged
+};
+
 public class Character : MonoBehaviour {
 
 	/// Health of the character. Duel is over when a character reaches 0 health.
@@ -9,19 +14,48 @@ public class Character : MonoBehaviour {
 
 	/// Strength of the character. Increases melee attack damage by this value.
 	int strength = 0;
+	public int GetStrength() { return strength; }
 
 	/// Dextyerity of the character. Increase magic 
 	int dexterity = 0;
+	public int GetDexterity() { return dexterity; }
+
+	/// Max number of cards in a players hand.
+	int maxHandSize = 8;
+
+	/// Cards in the player's hand.
+	List<Card> hand = new List<Card>();
+
+	
 
 	/// The shields the player has active.
 	List<Shield> shields;
 
+	public int getTotalShield() {
+		int shieldTotal = 0;
+		foreach (Shield shield in shields) {
+			shieldTotal += shield.GetValue();
+		}
+		return shieldTotal;
+	}
 	
-	bool Damage(int damage) {
+	public bool Damage(int damage) {
 		health -= damage;
 		if (health <= 0) {
 			return true;
 		}
 		return true;
+	}
+
+	public void DiscardRandom() {
+
+	}
+
+	public void Discard(int index) {
+
+	}
+
+	public bool AddCard(Card card) {
+
 	}
 }
