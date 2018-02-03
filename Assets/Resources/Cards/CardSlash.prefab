@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23715341195352458}
   - component: {fileID: 95916529045614560}
   m_Layer: 0
-  m_Name: Card (1)
+  m_Name: Card
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,7 +129,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1589841279336656}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.4493916, y: 1.7345457, z: 0.3832271}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4837112941975496}
@@ -356,7 +356,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1367561108320312}
-  m_Text: "Deal 1 damage. \nDeals 2 additional damage \nto health."
+  m_Text: "Deal (1) damage. \nDeals 2 additional damage \nto health."
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -405,3 +405,4 @@ MonoBehaviour:
   titleText: {fileID: 102958106515203298}
   costText: {fileID: 102568629420123468}
   text: {fileID: 102695137378062684}
+  damage: []

@@ -45,6 +45,11 @@ public class Character : MonoBehaviour {
 	/// The shields the player has active.
 	List<Shield> shields;
 
+	/// Called when a character's shield is broken.
+	public void BreakShield(Shield shield) {
+		shields.Remove(shield);
+	}
+
 	public int getTotalShield() {
 		int shieldTotal = 0;
 		foreach (Shield shield in shields) {
@@ -53,7 +58,24 @@ public class Character : MonoBehaviour {
 		return shieldTotal;
 	}
 	
+	/// Generic damage function. Called whenever a card deals damage.
 	public bool Damage(int damage) {
+		if (getTotalShield() > 0) {
+			while (damage != 0 && shields.Count != 0) {
+				damage = shields[0].Damage(damage);
+			}
+		}
+		if (damage > 0) {
+			return false;
+		}
+		return DamageToHealth(damage);
+	}
+
+	/// Called only when the character has no shields up.
+	bool DamageToHealth(int damage) {
+		if (board.HasCard(typeof(CardAdrenalineRush))) {
+			
+		}
 		health -= damage;
 		if (health <= 0) {
 			return true;
