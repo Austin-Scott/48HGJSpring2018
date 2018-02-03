@@ -7,6 +7,12 @@ public class Deck {
 	/// Cards in the deck
 	List<Card> cards;
 
+	/// the board the deck is on
+	Board board;
+
+	/// True if this deck belongs to the player
+	bool player;
+
 	/// removes the last card in the deck and returns it.
 	public Card Draw() {
 		int lastCardIndex = cards.Count - 1;
@@ -15,6 +21,7 @@ public class Deck {
 		}
 		Card card = cards[lastCardIndex];
 		cards.RemoveAt(lastCardIndex);
+		card.inDeck = false;
 		return card;
 	}
 
@@ -29,7 +36,11 @@ public class Deck {
 	public IEnumerator PositionDeck(Vector3 position) {
 		Coroutine[] movementCoroutines = new Coroutine[cards.Count];
 		for (int i = 0; i < cards.Count; i++) {
-			movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].SmoothMove(position + new Vector3(0f, 0.1f * i, 0f)));
+			if (player) {
+				movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].SmoothMove(board.playerDeckPosition.position));
+			} else {
+				movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].SmoothMove(board.enemyDeckPosition.position));
+			}
 		}
 		foreach (Coroutine coroutine in movementCoroutines) {
 			yield return coroutine;
@@ -37,7 +48,9 @@ public class Deck {
 	}
 
 	/// Sets the cards firendy and target properties.
-	public void Initialize(Character holder, Character target) {
+	public void Initialize(Character holder, Character target, Board board, bool player) {
+		this.board = board;
+		this.player = player;
 		foreach (Card card in cards) {
 			card.Initialize(holder, target);
 		}

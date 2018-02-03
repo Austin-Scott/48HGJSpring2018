@@ -99,13 +99,14 @@ public class Character : MonoBehaviour {
 	}
 
 	/// Initializes a character at the beginning of a match.
-	public IEnumerator Initialize(int health, int strength, int dexterity, Deck deck, bool player, Character target) {
+	public IEnumerator Initialize(int health, int strength, int dexterity, Deck deck, bool player, Character target, Board board) {
 		this.health = health;
         this.maxHealth = health;
 		this.strength = strength;
 		this.dexterity = dexterity;
 		this.deck = deck;
-		deck.Initialize(this, target);
+		this.board = board;
+		deck.Initialize(this, target, board, player);
 		this.player = player;
 		lastUsedCharacterID ++;
 		characterID = lastUsedCharacterID;
@@ -146,11 +147,13 @@ public class Character : MonoBehaviour {
 	/// Add a card to the characters hand.
 	public IEnumerator AddCard(Card card) {
 		if (hand.Count >= maxHandSize) {
+			yield return card.Destroy();
 			yield break;
 		}
 		hand.Add(card);
 		//TODO add card animation
 		StartCoroutine(PositionHand());
+		card.onBoard = false;
 	}
 
 	/// Draws a card from the characters deck and adds it to the characters hand.
@@ -162,7 +165,12 @@ public class Character : MonoBehaviour {
 
 	/// Repositions the hand. Should be called everytime a card is removed or added.
 	public IEnumerator PositionHand() {
-		Vector3 handLocation = Vector3.zero;
+		Vector3 handLocation;
+		if (player) {
+			handLocation = board.playerHandPosition.position;
+		} else {
+			handLocation = board.enemyHandPosition.position;
+		}
 		int handCount = hand.Count;
 		int halfHandCount = handCount / 2;
 		float cardSeperation = 10f / handCount;
@@ -209,7 +217,7 @@ public class Character : MonoBehaviour {
 		}
 		board.AddCard(card, this, phaseIndex);
 		hand.Remove(card);
-		//TODO place card animation
+		yield return StartCoroutine(card.SmoothMove(board.phasePositions[phaseIndex].position));
 		StartCoroutine(PositionHand());
 	}
 

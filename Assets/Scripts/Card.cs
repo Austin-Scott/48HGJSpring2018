@@ -17,6 +17,12 @@ public abstract class Card : MonoBehaviour {
 	/// Number of phases a card executes over.
 	protected int cost;
 
+	/// True if the card is on the board
+	public bool onBoard = false;
+
+	/// True if the card is in the deck
+	public bool inDeck = true;
+
 	/// Type of the card (not implemented)
 	CardType cardType;
 
@@ -31,10 +37,10 @@ public abstract class Card : MonoBehaviour {
 	protected TextMesh text;
 
 	/// The character using the card
-	protected Character holder { get; private set; }
+	public Character holder { get; private set; }
 
 	/// The character opposite the holder. Target
-	protected Character target { get; private set; }
+	public Character target { get; private set; }
 
 	/// Position of the card on the board before it is moved for hover animation.
 	Vector3 positionBeforeHover;
@@ -45,16 +51,21 @@ public abstract class Card : MonoBehaviour {
 	/// True if the card is currently moving.
 	bool moving = false;
 
+	/// Although hovering is considered moving, it can be interrupted be re-hovering, so it needs to be stored.
+	bool hovering = false;
+
 	/// Although dehovering is considered moving, it can be interrupted be re-hovering, so it needs to be stored.
-	bool deHovering = false;
+	bool dehovering = false;
 
 	/// True while the player is dragging a card
 	bool grabbing = false;
 
 	public virtual IEnumerator Hover() {
-		if (moving && !deHovering) {
+		if (moving && !hovering) {
 			yield break;
 		}
+		hovering = true;
+		dehovering = false;
 		if (hoverCoroutine != null) {
 			transform.position = positionBeforeHover;
 		} else {
@@ -62,20 +73,26 @@ public abstract class Card : MonoBehaviour {
 		}
 		if (hoverCoroutine != null) {
 			StopCoroutine(hoverCoroutine);
-			deHovering = false;
+			// deHovering = false;
 		}
-		hoverCoroutine = StartCoroutine(LerpPosition(transform.position + Vector3.up * 5f, 2f));
+		hoverCoroutine = StartCoroutine(LerpPosition(transform.position + Vector3.up * 2f, 2f));
 		yield return hoverCoroutine;
 	}
 
 	public virtual IEnumerator DeHover() {
-		deHovering = true;
+		if (moving && !hovering) {
+			yield break;
+		}
+		hovering = true;
+		dehovering = true;
 		if (hoverCoroutine != null) {
 			StopCoroutine(hoverCoroutine);
 		}
 		hoverCoroutine = StartCoroutine(LerpPosition(positionBeforeHover, 2f));
 		yield return hoverCoroutine;
-		deHovering = false;
+		hovering = false;
+		dehovering = false;
+		hoverCoroutine = null;
 	}
 
 	public void DestroyAtEndOfTurn() {
@@ -127,6 +144,8 @@ public abstract class Card : MonoBehaviour {
 
 	/// Smoothly move the card to desired position.
 	public IEnumerator SmoothMove (Vector3 desiredPosition, float speed = 1f) {
+		hovering = false;
+		dehovering = false;
 		if (hoverCoroutine != null) {
 			StopCoroutine(hoverCoroutine);
 			hoverCoroutine = null;
@@ -137,6 +156,8 @@ public abstract class Card : MonoBehaviour {
 
 	/// Smoothly transform the card to the desired position.
 	public IEnumerator SmoothTransform (Transform desiredTransform, float speed = 1f) {
+		hovering = false;
+		dehovering = false;
 		if (hoverCoroutine != null) {
 			StopCoroutine(hoverCoroutine);
 			hoverCoroutine = null;
@@ -156,6 +177,10 @@ public abstract class Card : MonoBehaviour {
 	protected virtual void Update() {
 		if (grabbing && Input.GetMouseButtonUp(0)){
 			grabbing = false;
+			//if not placed, put back in hand
+			if (!onBoard) {
+				StartCoroutine(holder.PositionHand());
+			}
 		}
 		if (grabbing) {
 			// this creates a horizontal plane passing through this object's center
@@ -169,27 +194,35 @@ public abstract class Card : MonoBehaviour {
 				Vector3 hitPoint = ray.GetPoint(distance);
 				// use the hitPoint to position the card.
 				transform.position = hitPoint;
+				positionBeforeHover = transform.position;
 			}
 		}
 	}
 
 	protected virtual void OnMouseOver() {
-		if (Input.GetMouseButtonDown(0)) {
+		if ((hoverCoroutine == null || dehovering) && !grabbing && !onBoard) {
+			StartCoroutine(Hover());
+		}
+		if (Input.GetMouseButtonDown(0) && (!moving || hovering) && !inDeck && holder == Board.player) {
 			if (hoverCoroutine != null) {
 				StopCoroutine(hoverCoroutine);
 			}
-			grabbing = true;
+			if (onBoard) {
+				StartCoroutine(holder.AddCard(this));
+			} else {
+				grabbing = true;
+			}
 		}
 	}
 
-	protected virtual void OnMouseEnter() {
-		if (!grabbing) {
-			StartCoroutine(Hover());
-		}
-	}
+	// protected virtual void OnMouseEnter() {
+	// 	if (!grabbing && !onBoard) {
+	// 		StartCoroutine(Hover());
+	// 	}
+	// }
 
 	protected virtual void OnMouseExit() {
-		if (!grabbing) {
+		if (!grabbing && !onBoard) {
 			StartCoroutine(DeHover());
 		}
 	}
