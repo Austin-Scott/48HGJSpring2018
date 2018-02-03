@@ -19,6 +19,27 @@ public class Character : MonoBehaviour {
 
 	/// Health of the character. Duel is over when a character reaches 0 health.
 	int health = 15;
+    int maxHealth;
+    public void IncreaseHealth(int amount)
+    {
+        if (amount > 0) {
+            if (health + amount < maxHealth)
+            {
+                health += amount;
+            } else
+            {
+                health = maxHealth;
+            }
+        } else
+        {
+            if (health + amount > 0)
+            {
+                health += amount;
+            } else
+            {
+                health = 0;
+            }
+        }
 
 	/// The deck of the character
 	Deck deck;
@@ -86,6 +107,7 @@ public class Character : MonoBehaviour {
 	/// Initializes a character at the beginning of a match.
 	public IEnumerator Initialize(int health, int strength, int dexterity, Deck deck, bool player) {
 		this.health = health;
+        this.maxHealth = health;
 		this.strength = strength;
 		this.dexterity = dexterity;
 		this.deck = deck;
