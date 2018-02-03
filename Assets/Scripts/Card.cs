@@ -10,10 +10,13 @@ public abstract class Card : MonoBehaviour {
 	protected int cost;
 
 	/// Text mesh of the title.
+	[SerializeField]
 	TextMesh titleText;
-	/// Text mesh of the title.
+	/// Text mesh of the cost display.
+	[SerializeField]
 	TextMesh costText;
-	/// Text mesh of the title.
+	/// Text mesh of the text.
+	[SerializeField]
 	TextMesh text;
 
 	/// The character using the card
@@ -34,5 +37,25 @@ public abstract class Card : MonoBehaviour {
 	// public virtual IEnumerator Set(int phaseIndex) {
 
 	// }
+
+	public IEnumerator LerpTransform (Transform desiredTransform) {
+		while (transform != desiredTransform) {
+			float deltaTime = Time.deltaTime;
+			transform.rotation = Quaternion.Lerp(transform.rotation, desiredTransform.rotation, deltaTime);
+			transform.position = Vector3.Lerp(transform.position, desiredTransform.position, deltaTime);
+			transform.localScale = Vector3.Lerp(transform.localScale, desiredTransform.localScale, deltaTime);
+			yield return null;
+		}
+		Debug.Log("There");
+	}
+
+	public IEnumerator LerpPosition (Vector3 desiredPosition) {
+		while (transform.position != desiredPosition) {
+			float deltaTime = Time.deltaTime*5;
+			transform.position = Vector3.Slerp(transform.position, desiredPosition, deltaTime);
+			yield return null;
+		}
+		Debug.Log("There");
+	}
 	
 }
