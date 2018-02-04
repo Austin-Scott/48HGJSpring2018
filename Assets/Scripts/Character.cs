@@ -151,7 +151,7 @@ public class Character : MonoBehaviour {
 		}
 		hand.Add(card);
 		//TODO add card animation
-		StartCoroutine(PositionHand());
+		yield return StartCoroutine(PositionHand());
 		card.onBoard = false;
 	}
 
@@ -164,12 +164,13 @@ public class Character : MonoBehaviour {
 
 	/// Repositions the hand. Should be called everytime a card is removed or added.
 	public IEnumerator PositionHand() {
-		Vector3 handLocation;
+		Transform handLocation;
 		if (player) {
-			handLocation = board.playerHandPosition.position;
+			handLocation = board.playerHandPosition;
 		} else {
-			handLocation = board.enemyHandPosition.position;
+			handLocation = board.enemyHandPosition;
 		}
+		Vector3 originalLocation = handLocation.position;
 		int handCount = hand.Count;
 		int halfHandCount = handCount / 2;
 		float cardSeperation = 10f / handCount;
@@ -177,15 +178,17 @@ public class Character : MonoBehaviour {
 		// if odd number of cards.
 		if (handCount % 2 == 1) {
 			// move middle card to middle of hand
-			movementCoroutines[halfHandCount] = StartCoroutine(hand[halfHandCount].SmoothMove(handLocation));
+			movementCoroutines[halfHandCount] = StartCoroutine(hand[halfHandCount].SmoothTransform(handLocation));
 			// fan cards left of the middle card
 			for (int i = halfHandCount - 1; i >= 0; i--) {
-				movementCoroutines[i] = StartCoroutine(hand[i].SmoothMove(handLocation - new Vector3(cardSeperation*(halfHandCount-i), 0f, 0f)));
+				handLocation.position = originalLocation - new Vector3(cardSeperation*(halfHandCount-i), 0.2f, 0f);
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(handLocation));
 				//TODO rotate the cards to look natural
 			}
 			// fan cards right of the middle card
 			for (int i = halfHandCount + 1; i < handCount; i++) {
-				movementCoroutines[i] = StartCoroutine(hand[i].SmoothMove(handLocation + new Vector3(cardSeperation*(i - halfHandCount), 0f, 0f)));
+				handLocation.position = originalLocation + new Vector3(cardSeperation*(i - halfHandCount), 0.2f, 0f);
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(handLocation));
 				//TODO rotate the cards to look natural
 			}
 		}
@@ -193,12 +196,14 @@ public class Character : MonoBehaviour {
 		else {
 			// fan cards left of the middle
 			for (int i = halfHandCount - 1; i >= 0; i--) {
-				movementCoroutines[i] = StartCoroutine(hand[i].SmoothMove(handLocation - new Vector3(cardSeperation*(halfHandCount-i), 0f, 0f)));
+				handLocation.position = originalLocation - new Vector3(cardSeperation*(halfHandCount-i), 0.2f, 0f);
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(handLocation));
 				//TODO rotate the cards to look natural
 			}
 			// fan cards right of the middle
 			for (int i = halfHandCount; i < handCount; i++) {
-				movementCoroutines[i] = StartCoroutine(hand[i].SmoothMove(handLocation + new Vector3(cardSeperation*(i - halfHandCount), 0f, 0f)));
+				handLocation.position = originalLocation + new Vector3(cardSeperation*(i - halfHandCount), 0.2f, 0f);
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(handLocation));
 				//TODO rotate the cards to look natural
 			}
 		}
@@ -216,7 +221,7 @@ public class Character : MonoBehaviour {
 		}
 		board.AddCard(card, this, phaseIndex);
 		hand.Remove(card);
-		yield return StartCoroutine(card.SmoothMove(board.phasePositions[phaseIndex].position));
+		yield return StartCoroutine(card.SmoothMove(board.phasePositions[phaseIndex].position + Vector3.up * 0.3f));
 		StartCoroutine(PositionHand());
 	}
 

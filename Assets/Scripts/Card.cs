@@ -111,7 +111,7 @@ public abstract class Card : MonoBehaviour {
 	/// Slerps the card's transofrm to a given transform over time. Speed of 1 is default.
 	private IEnumerator LerpTransform (Transform desiredTransform, float speed = 1f) {
 		moving = true;
-		while (transform != desiredTransform) {
+		while (transform.rotation != desiredTransform.rotation || transform.position != desiredTransform.position) {
 			float deltaTime = Time.deltaTime * 5f * speed;
 			transform.rotation = Quaternion.Slerp(transform.rotation, desiredTransform.rotation, deltaTime);
 			transform.position = Vector3.Slerp(transform.position, desiredTransform.position, deltaTime);
@@ -122,7 +122,37 @@ public abstract class Card : MonoBehaviour {
 			if (Vector3.Distance(transform.position, desiredTransform.position) < 0.1f) {
 				transform.position = desiredTransform.position;
 			}
-			//TODO scale almost finished scaling check (if we decide to use it)
+			if (transform.rotation.eulerAngles.z >= 90 || transform.rotation.eulerAngles.z <= -90) {
+				SetAllText(false);
+			} else {
+				SetAllText(true);
+			}
+			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
+			yield return null;
+		}
+		moving = false;
+	}
+
+	/// Slerps the card's transofrm to a given transform over time. Speed of 1 is default.
+	private IEnumerator LerpTransform (Vector3 desiredPosition, Quaternion desiredRotation, float speed = 1f) {
+		moving = true;
+		while (transform.rotation != desiredRotation || transform.position != desiredPosition) {
+			float deltaTime = Time.deltaTime * 5f * speed;
+			transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, deltaTime);
+			transform.position = Vector3.Slerp(transform.position, desiredPosition, deltaTime);
+			if (Quaternion.Angle(transform.rotation, desiredRotation) < 5f) {
+				transform.rotation = desiredRotation;
+			}
+			if (Vector3.Distance(transform.position, desiredPosition) < 0.1f) {
+				transform.position = desiredPosition;
+			}
+			Debug.Log(transform.rotation.eulerAngles.z);
+			if (transform.rotation.eulerAngles.z >= 90 || transform.rotation.eulerAngles.z <= -90) {
+				SetAllText(false);
+			} else {
+				SetAllText(true);
+			}
+			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
 			yield return null;
 		}
 		moving = false;
@@ -166,6 +196,18 @@ public abstract class Card : MonoBehaviour {
 		yield return StartCoroutine(LerpTransform(desiredTransform, speed));
 	}
 
+	/// Smoothly transform the card to the desired position.
+	public IEnumerator SmoothTransform (Vector3 desiredPosition, Quaternion desiredRotation, float speed = 1f) {
+		hovering = false;
+		dehovering = false;
+		if (hoverCoroutine != null) {
+			StopCoroutine(hoverCoroutine);
+			hoverCoroutine = null;
+			transform.position = positionBeforeHover;
+		}
+		yield return StartCoroutine(LerpTransform(desiredPosition, desiredRotation, speed));
+	}
+
 	protected virtual void Awake() {
 
 	}
@@ -175,7 +217,7 @@ public abstract class Card : MonoBehaviour {
 	}
 
 	protected virtual void Update() {
-		if (grabbing && Input.GetMouseButtonUp(0)){
+		if (grabbing && Input.GetMouseButtonUp(0)) {
 			grabbing = false;
 			//if not placed, put back in hand
 			if (!onBoard) {
@@ -184,7 +226,7 @@ public abstract class Card : MonoBehaviour {
 		}
 		if (grabbing) {
 			// this creates a horizontal plane passing through this object's center
-			Plane plane = new Plane(new Vector3(0f, 1f, 0f), Vector3.up);
+			Plane plane = new Plane(new Vector3(0f, 0.3f, 0f), Vector3.up);
 			// create a ray from the mousePosition
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			// plane.Raycast returns the distance from the ray start to the hit point
@@ -231,5 +273,11 @@ public abstract class Card : MonoBehaviour {
 	public virtual void Initialize(Character holder, Character target) {
 		this.holder = holder;
 		this.target = target;
+	}
+
+	void SetAllText(bool active) {
+		titleText.gameObject.SetActive(active);
+		text.gameObject.SetActive(active);
+		costText.gameObject.SetActive(active);
 	}
 }
