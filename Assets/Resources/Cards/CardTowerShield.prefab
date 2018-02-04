@@ -124,9 +124,9 @@ GameObject:
   - component: {fileID: 4590271293465230}
   - component: {fileID: 65288992908723416}
   - component: {fileID: 54177472819133256}
-  - component: {fileID: 114306674680361532}
+  - component: {fileID: 114956021157021924}
   m_Layer: 0
-  m_Name: CardSeduce
+  m_Name: CardTowerShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -667,7 +667,7 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
---- !u!114 &114306674680361532
+--- !u!114 &114956021157021924
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -675,7 +675,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1589841279336656}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07eccc6d0bc46b14ba074ef76219c662, type: 3}
+  m_Script: {fileID: 11500000, guid: 12277ac831f45fd4e8e22c214079ed1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cost: 1
