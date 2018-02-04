@@ -261,10 +261,12 @@ public class Character : MonoBehaviour {
 		}
 		board.AddCard(card, this, phaseIndex);
 		hand.Remove(card);
-		Vector3 desiredPosition = board.phasePositions[phaseIndex].position + Vector3.up * 0.3f;
-		Quaternion desiredRotation = board.phasePositions[phaseIndex].rotation;
-		yield return StartCoroutine(card.SmoothTransform(desiredPosition, desiredRotation));
-		StartCoroutine(PositionHand());
+		Vector3 desiredPosition = board.phasePositions[phaseIndex].transform.position + Vector3.up * 0.3f;
+		Quaternion desiredRotation = board.phasePositions[phaseIndex].transform.rotation;
+		Coroutine moveCardRoutine = StartCoroutine(card.SmoothTransform(desiredPosition, desiredRotation));
+		Coroutine positionHandRoutine = StartCoroutine(PositionHand());
+		yield return moveCardRoutine;
+		yield return positionHandRoutine;
 	}
 
 	public IEnumerator RemoveCardFromBoard(Card card, int phaseIndex) {

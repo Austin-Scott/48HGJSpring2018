@@ -71,6 +71,8 @@ public abstract class Card : MonoBehaviour {
 	/// True while the player is dragging a card
 	bool grabbing = false;
 
+	public int phaseIndex = -1;
+
 	public virtual IEnumerator Hover() {
 		if (moving && !hovering) {
 			yield break;
@@ -219,6 +221,7 @@ public abstract class Card : MonoBehaviour {
 	protected virtual void Update() {
 		if (grabbing && Input.GetMouseButtonUp(0)) {
 			grabbing = false;
+			GameController.currentBoard.SetPhaseCollider(false);
 			//if not placed, put back in hand
 			if (!onBoard) {
 				StartCoroutine(holder.PositionHand());
@@ -242,7 +245,7 @@ public abstract class Card : MonoBehaviour {
 	}
 
 	protected virtual void OnMouseOver() {
-		if ((hoverCoroutine == null || dehovering) && !grabbing && !onBoard) {
+		if ((hoverCoroutine == null || dehovering) && !grabbing && !onBoard && !inDeck) {
 			StartCoroutine(Hover());
 		}
 		if (Input.GetMouseButtonDown(0) && (!moving || hovering) && !inDeck && holder == Board.player) {
@@ -250,9 +253,11 @@ public abstract class Card : MonoBehaviour {
 				StopCoroutine(hoverCoroutine);
 			}
 			if (onBoard) {
+				GameController.currentBoard.RemoveCard(this, holder, phaseIndex);
 				StartCoroutine(holder.AddCard(this));
 			} else {
 				grabbing = true;
+				GameController.currentBoard.SetPhaseCollider(true);
 			}
 		}
 	}
@@ -264,7 +269,7 @@ public abstract class Card : MonoBehaviour {
 	// }
 
 	protected virtual void OnMouseExit() {
-		if (!grabbing && !onBoard) {
+		if (!grabbing && !onBoard && !inDeck) {
 			StartCoroutine(DeHover());
 		}
 	}

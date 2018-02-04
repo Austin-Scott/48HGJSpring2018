@@ -11,7 +11,7 @@ public class GameController : MonoBehaviour {
 	/// Prefab for a character
 	Character characterPrefab;
 
-	Board currentBoard;
+	public static Board currentBoard;
 
 	/// Load resources
 	void Awake() {
@@ -60,10 +60,6 @@ public class GameController : MonoBehaviour {
 	void Start() {
 		currentBoard = Instantiate(boardPrefab);
 		StartCoroutine(currentBoard.Initialize(Instantiate(characterPrefab), Instantiate(characterPrefab)));
-
-        
-
-
     }
 
 	/// Creates a card of type
