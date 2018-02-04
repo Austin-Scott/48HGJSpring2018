@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Character : MonoBehaviour {
 
-    bool player;
+    public bool player { get; private set; }
 
     /// The ID of the last character created.
     public static int lastUsedCharacterID = -1;
@@ -19,7 +19,7 @@ public class Character : MonoBehaviour {
     int maxHealth;
 
     /// The deck of the character
-    Deck deck;
+    public Deck deck;
 
     /// The board the character is on
     Board board;
@@ -176,6 +176,7 @@ public class Character : MonoBehaviour {
 	/// Add a card to the characters hand.
 	public IEnumerator AddCard(Card card) {
 		if (hand.Count >= maxHandSize) {
+			Debug.LogWarning("Bug here?");
 			yield return card.Destroy();
 			yield break;
 		}
@@ -212,7 +213,7 @@ public class Character : MonoBehaviour {
 			// move middle card to middle of hand
 			Quaternion middleRotation = originalRotation;
 			Vector3 middleHandLocation = originalLocation + new Vector3(0f, 0.2f*halfHandCount, 0f);
-			movementCoroutines[halfHandCount] = StartCoroutine(hand[halfHandCount].SmoothTransform(middleHandLocation, middleRotation));
+			movementCoroutines[halfHandCount] = StartCoroutine(hand[halfHandCount].SmoothTransform(middleHandLocation, middleRotation, 2f));
 			// fan cards left of the middle card
 			for (int i = halfHandCount - 1; i >= 0; i--) {
 				Quaternion newRotation = originalRotation;
@@ -220,7 +221,7 @@ public class Character : MonoBehaviour {
 				eulerAngles.y += -rotationSeperation * (halfHandCount-i);
 				newRotation.eulerAngles = eulerAngles;
 				Vector3 newHandLocation = originalLocation + new Vector3(-cardSeperation*(halfHandCount-i), 0.2f*i, 0f);
-				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation));
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation, 2f));
 			}
 			// fan cards right of the middle card
 			for (int i = halfHandCount + 1; i < handCount; i++) {
@@ -229,7 +230,7 @@ public class Character : MonoBehaviour {
 				eulerAngles.y += rotationSeperation * (i - halfHandCount);
 				newRotation.eulerAngles = eulerAngles;
 				Vector3 newHandLocation = originalLocation + new Vector3(cardSeperation*(i - halfHandCount), 0.2f*i, 0f);
-				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation));
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation, 2f));
 			}
 		}
 		// if even number of cards
@@ -241,7 +242,7 @@ public class Character : MonoBehaviour {
 				eulerAngles.y += -rotationSeperation * (halfHandCount-i);
 				newRotation.eulerAngles = eulerAngles;
 				Vector3 newHandLocation = originalLocation + new Vector3(-cardSeperation*(halfHandCount-i), 0.2f*i, 0f);
-				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation));
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation, 2f));
 			}
 			// fan cards right of the middle
 			for (int i = halfHandCount; i < handCount; i++) {
@@ -250,7 +251,7 @@ public class Character : MonoBehaviour {
 				eulerAngles.y += rotationSeperation * (i - halfHandCount);
 				newRotation.eulerAngles = eulerAngles;
 				Vector3 newHandLocation = originalLocation + new Vector3(cardSeperation*(i - halfHandCount), 0.2f*i, 0f);
-				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation));
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation, 2f));
 			}
 		}
 
@@ -265,14 +266,16 @@ public class Character : MonoBehaviour {
 		if (board.running) {
 			yield break;
 		}
-		board.AddCard(card, this, phaseIndex);
+		if (!board.AddCard(card, this, phaseIndex)) {
+			yield break;
+		}
 		hand.Remove(card);
-		Vector3 desiredPosition = board.phasePositions[phaseIndex].transform.position + Vector3.up * 0.3f;
-		Quaternion desiredRotation = board.phasePositions[phaseIndex].transform.rotation;
-		Coroutine moveCardRoutine = StartCoroutine(card.SmoothTransform(desiredPosition, desiredRotation));
+		Coroutine moveCardRoutine = StartCoroutine(card.PositionOnBoard());
 		Coroutine positionHandRoutine = StartCoroutine(PositionHand());
 		yield return moveCardRoutine;
+		// Debug.Log("card placed");
 		yield return positionHandRoutine;
+		// Debug.Log("hand arranged");
 	}
 
 	public IEnumerator RemoveCardFromBoard(Card card, int phaseIndex) {
@@ -281,6 +284,61 @@ public class Character : MonoBehaviour {
 		}
 		board.RemoveCard(card, this, phaseIndex);
 		//TODO remove card animation
-		yield return StartCoroutine(AddCard(card));
+		int remaingCardCount = board.GetCardCount(this, phaseIndex);
+		Coroutine[] positionCardRoutines = new Coroutine[remaingCardCount];
+		Coroutine addCardRoutine = StartCoroutine(AddCard(card));
+		for (int i = 0; i < remaingCardCount; i++) {
+			positionCardRoutines[i] = StartCoroutine(board.GetCard(this, phaseIndex, i).PositionOnBoard());
+		}
+		yield return addCardRoutine;
+		foreach (Coroutine coroutine in positionCardRoutines) {
+			yield return coroutine;
+		}
+	}
+
+	/// Returns true if hand is busu
+	public bool GetHandBusy() {
+		foreach (Card card in hand) {
+			if (card.GetBusy()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public IEnumerator PlayAuto () {
+		// List<Card>[] sortedCards = new List<Card>[4];
+		// for (int i = 0; i < 4; i++) {
+		// 	sortedCards[i] = new List<Card>();
+		// }
+		// foreach (Card card in hand) {
+		// 	sortedCards[card.GetCost()].Add(card);
+		// }
+		List<Card> canPlay = new List<Card>(hand);
+		List<Card> plannedToPlay = new List<Card>();
+		int time = 3;
+		while (time != 0) {
+			for (int i = canPlay.Count-1; i >= 0; i--) {
+				if (canPlay[i].GetCost() > time) {
+					canPlay.RemoveAt(i);
+				}
+			}
+			if (canPlay.Count == 0) {
+				break;
+			}
+			// choose random card to play
+			int randomCardIndex = Random.Range(0, canPlay.Count);
+			plannedToPlay.Add(canPlay[randomCardIndex]);
+			time -= canPlay[randomCardIndex].GetCost();
+			canPlay.RemoveAt(randomCardIndex);
+		}
+		time = 0;
+		foreach (Card card in plannedToPlay) {
+			yield return PlaceCard(card, time);
+			time += card.GetCost();
+			if (time > 2) {
+				yield break;
+			}
+		}
 	}
 }

@@ -7,6 +7,6 @@ public class CardPhysicallyFit : Card {
 	public override IEnumerator Use() {
         holder.IncreaseStrength(1);
         DestroyAtEndOfTurn();
-		return null;
+		yield break;
 	}
 }

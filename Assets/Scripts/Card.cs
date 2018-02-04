@@ -26,7 +26,9 @@ public abstract class Card : MonoBehaviour {
     public abstract IEnumerator Use();
 
 	/// Number of phases a card executes over.
+	[SerializeField]
 	protected int cost;
+	public int GetCost() { return cost; }
 
 	/// True if the card is on the board
 	public bool onBoard = false;
@@ -55,6 +57,7 @@ public abstract class Card : MonoBehaviour {
 
 	/// Position of the card on the board before it is moved for hover animation.
 	Vector3 positionBeforeHover;
+	Quaternion rotationBeforeHover;
 
 	/// The current hover or dehover routine.	
 	Coroutine hoverCoroutine;
@@ -81,14 +84,22 @@ public abstract class Card : MonoBehaviour {
 		dehovering = false;
 		if (hoverCoroutine != null) {
 			transform.position = positionBeforeHover;
+			transform.rotation = rotationBeforeHover;
 		} else {
 			positionBeforeHover = transform.position;
+			rotationBeforeHover = transform.rotation;
 		}
 		if (hoverCoroutine != null) {
 			StopCoroutine(hoverCoroutine);
 			// deHovering = false;
 		}
-		hoverCoroutine = StartCoroutine(LerpPosition(transform.position + Vector3.up * 2f, 2f));
+		Vector3 desiredPosition;
+		if (onBoard) {
+			desiredPosition = transform.position + Vector3.up * 2f;
+		} else {
+			desiredPosition = transform.position + new Vector3(0f, 5f, 4f);
+		}
+		hoverCoroutine = StartCoroutine(LerpTransform(desiredPosition, Quaternion.identity, 2f));
 		yield return hoverCoroutine;
 	}
 
@@ -101,11 +112,17 @@ public abstract class Card : MonoBehaviour {
 		if (hoverCoroutine != null) {
 			StopCoroutine(hoverCoroutine);
 		}
-		hoverCoroutine = StartCoroutine(LerpPosition(positionBeforeHover, 2f));
+		hoverCoroutine = StartCoroutine(LerpTransform(positionBeforeHover, rotationBeforeHover, 2f));
 		yield return hoverCoroutine;
 		hovering = false;
 		dehovering = false;
 		hoverCoroutine = null;
+	}
+
+	public IEnumerator PositionOnBoard() {
+		Vector3 desiredPosition = GameController.currentBoard.phasePositions[phaseIndex].transform.position + new Vector3(0f, 0.3f, -0.8f) * (GameController.currentBoard.GetCardCount(holder, phaseIndex)-1);
+		Quaternion desiredRotation = GameController.currentBoard.phasePositions[phaseIndex].transform.rotation;
+		yield return StartCoroutine(SmoothTransform(desiredPosition, desiredRotation));
 	}
 
 	public void DestroyAtEndOfTurn() {
@@ -113,10 +130,12 @@ public abstract class Card : MonoBehaviour {
 	}
 
 	public virtual void StartDestroyAnimation() {
+		Board.endTurn -= StartDestroyAnimation;
 		StartCoroutine(Destroy());
 	}
 
 	public virtual IEnumerator Destroy() {
+		GameController.currentBoard.RemoveCard(this, phaseIndex);
 		Destroy(gameObject);
 		yield break; //TODO destruction animation	
 	}
@@ -129,10 +148,10 @@ public abstract class Card : MonoBehaviour {
 			transform.rotation = Quaternion.Slerp(transform.rotation, desiredTransform.rotation, deltaTime);
 			transform.position = Vector3.Slerp(transform.position, desiredTransform.position, deltaTime);
 			transform.localScale = Vector3.Slerp(transform.localScale, desiredTransform.localScale, deltaTime);
-			if (Quaternion.Angle(transform.rotation, desiredTransform.rotation) < 5f) {
+			if (Quaternion.Angle(transform.rotation, desiredTransform.rotation) < 10f) {
 				transform.rotation = desiredTransform.rotation;
 			}
-			if (Vector3.Distance(transform.position, desiredTransform.position) < 0.1f) {
+			if (Vector3.Distance(transform.position, desiredTransform.position) < 1f) {
 				transform.position = desiredTransform.position;
 			}
 			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
@@ -148,10 +167,10 @@ public abstract class Card : MonoBehaviour {
 			float deltaTime = Time.deltaTime * 5f * speed;
 			transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, deltaTime);
 			transform.position = Vector3.Slerp(transform.position, desiredPosition, deltaTime);
-			if (Quaternion.Angle(transform.rotation, desiredRotation) < 5f) {
+			if (Quaternion.Angle(transform.rotation, desiredRotation) < 10f) {
 				transform.rotation = desiredRotation;
 			}
-			if (Vector3.Distance(transform.position, desiredPosition) < 0.1f) {
+			if (Vector3.Distance(transform.position, desiredPosition) < 1f) {
 				transform.position = desiredPosition;
 			}
 			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
@@ -164,9 +183,9 @@ public abstract class Card : MonoBehaviour {
 	private IEnumerator LerpPosition (Vector3 desiredPosition, float speed = 1f) {
 		moving = true;
 		while (transform.position != desiredPosition) {
-			float deltaTime = Time.deltaTime * 5 * speed;
+			float deltaTime = Time.deltaTime * 5f * speed;
 			transform.position = Vector3.Slerp(transform.position, desiredPosition, deltaTime);
-			if (Vector3.Distance(transform.position, desiredPosition) < 0.1f) {
+			if (Vector3.Distance(transform.position, desiredPosition) < 1f) {
 				transform.position = desiredPosition;
 			}
 			yield return null;
@@ -194,6 +213,7 @@ public abstract class Card : MonoBehaviour {
 			StopCoroutine(hoverCoroutine);
 			hoverCoroutine = null;
 			transform.position = positionBeforeHover;
+			transform.rotation = rotationBeforeHover;
 		}
 		yield return StartCoroutine(LerpTransform(desiredTransform, speed));
 	}
@@ -206,6 +226,7 @@ public abstract class Card : MonoBehaviour {
 			StopCoroutine(hoverCoroutine);
 			hoverCoroutine = null;
 			transform.position = positionBeforeHover;
+			transform.rotation = rotationBeforeHover;
 		}
 		yield return StartCoroutine(LerpTransform(desiredPosition, desiredRotation, speed));
 	}
@@ -219,6 +240,9 @@ public abstract class Card : MonoBehaviour {
 	}
 
 	protected virtual void Update() {
+		if (holder != Board.player) {
+			return;
+		}
 		if (grabbing && Input.GetMouseButtonUp(0)) {
 			grabbing = false;
 			GameController.currentBoard.SetPhaseCollider(false);
@@ -240,24 +264,27 @@ public abstract class Card : MonoBehaviour {
 				// use the hitPoint to position the card.
 				transform.position = hitPoint;
 				positionBeforeHover = transform.position;
+				rotationBeforeHover = transform.rotation;
 			}
 		}
 	}
 
 	protected virtual void OnMouseOver() {
-		if ((hoverCoroutine == null || dehovering) && !grabbing && !onBoard && !inDeck) {
+		if ((hoverCoroutine == null || dehovering) && !grabbing && !onBoard && !inDeck && holder.player == true) {
 			StartCoroutine(Hover());
 		}
-		if (Input.GetMouseButtonDown(0) && (!moving || hovering) && !inDeck && holder == Board.player) {
+		if (Input.GetMouseButtonDown(0) && (!moving || hovering) && !inDeck && holder.player == true && !GameController.currentBoard.running) {
 			if (hoverCoroutine != null) {
 				StopCoroutine(hoverCoroutine);
 			}
 			if (onBoard) {
-				GameController.currentBoard.RemoveCard(this, holder, phaseIndex);
-				StartCoroutine(holder.AddCard(this));
+				StartCoroutine(holder.RemoveCardFromBoard(this, phaseIndex));
 			} else {
-				grabbing = true;
-				GameController.currentBoard.SetPhaseCollider(true);
+				// Make sure no cards are in the middle of moving
+				if (!holder.GetHandBusy()) {
+					grabbing = true;
+					GameController.currentBoard.SetPhaseCollider(true);
+				}
 			}
 		}
 	}
@@ -269,7 +296,7 @@ public abstract class Card : MonoBehaviour {
 	// }
 
 	protected virtual void OnMouseExit() {
-		if (!grabbing && !onBoard && !inDeck) {
+		if (!grabbing && !onBoard && !inDeck && holder.player == true) {
 			StartCoroutine(DeHover());
 		}
 	}
@@ -278,5 +305,9 @@ public abstract class Card : MonoBehaviour {
 	public virtual void Initialize(Character holder, Character target) {
 		this.holder = holder;
 		this.target = target;
+	}
+
+	public bool GetBusy() {
+		return (moving && !hovering && !dehovering);
 	}
 }

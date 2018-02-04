@@ -6,6 +6,6 @@ public class CardPsychUp : Card {
 
 	public override IEnumerator Use() {
         holder.IncreaseStrength(3);
-		return null;
+		yield break;
 	}
 }

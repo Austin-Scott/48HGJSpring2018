@@ -51,7 +51,7 @@ public class Board : MonoBehaviour {
 		endTurn = null;
 		startTurn = null;
 		endPhase = null;
-		currentPhase = 0;
+		currentPhase = 1;
 		Board.player = player;
 		this.enemy = enemy;
 		SetPhaseCollider(false);
@@ -60,23 +60,36 @@ public class Board : MonoBehaviour {
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardPsychUp)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardStab)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardPhysicallyFit)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardHalberdStrike)));
+		Deck enemyDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardPsychUp)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardStab)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardPhysicallyFit)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardHalberdStrike)));
 		yield return StartCoroutine(player.Initialize(15, 0, 0, playerDeck, true, enemy, this));
-		yield return StartCoroutine(enemy.Initialize(20, 1, 1,  new Deck(GameController.CreateCard(typeof(CardSlash))), false, player, this));
+		yield return StartCoroutine(enemy.Initialize(20, 1, 1,  enemyDeck, false, player, this));
 		cardsOnBoard.Add(player, new List<Card>[3]);
 		cardsOnBoard.Add(enemy, new List<Card>[3]);
 		for (int i = 0; i < 3; i++) {
 			cardsOnBoard[player][i] = new List<Card>();
 			cardsOnBoard[enemy][i] = new List<Card>();
 		}
+		yield return StartCoroutine(enemy.DrawCard());
 		yield return StartCoroutine(player.DrawCard());
+		yield return StartCoroutine(enemy.DrawCard());
 		yield return StartCoroutine(player.DrawCard());
+		yield return StartCoroutine(enemy.DrawCard());
 		yield return StartCoroutine(player.DrawCard());
+		yield return StartCoroutine(enemy.DrawCard());
 		yield return StartCoroutine(player.DrawCard());
-		StartCoroutine(player.DrawCard());
+		currentPhase = 0;
 	}
 
 	/// Gets a card by global index. 0-2 is the players cards while 3-5 represents opponents cards.
@@ -110,10 +123,72 @@ public class Board : MonoBehaviour {
 
 	/// Sets a card by local index, relative to the character that owns the side of the board.
 	public bool AddCard(Card card, Character boardSideOwner, int phaseIndex) {
+		/// Check if any previous cards are using the phase the card is trying to be placed in.
+		if (card.GetCost() != 0) {
+			foreach (Card previousCards in cardsOnBoard[boardSideOwner][phaseIndex]) {
+				if (previousCards.GetCost() > 0) {
+					return false;
+				}
+			}
+			if (phaseIndex == 1) {
+				foreach (Card previousCards in cardsOnBoard[boardSideOwner][0]) {
+					if (previousCards.GetCost() > 1) {
+						return false;
+					}
+				}
+			} else if (phaseIndex == 2) {
+				foreach (Card previousCards in cardsOnBoard[boardSideOwner][0]) {
+					if (previousCards.GetCost() > 2) {
+						return false;
+					}
+				}
+				foreach (Card previousCards in cardsOnBoard[boardSideOwner][1]) {
+					if (previousCards.GetCost() > 1) {
+						return false;
+					}
+				}
+			}
+		}
+		/// Check if any future cards are being planned if cost > 1
+		if (card.GetCost() > 1) {
+			if (phaseIndex == 2) {
+				return false;
+			}
+			foreach (Card futureCards in cardsOnBoard[boardSideOwner][phaseIndex+1]) {
+				if (futureCards.GetCost() > 0) {
+					return false;
+				}
+			}
+			if (card.GetCost() > 2) {
+				if (phaseIndex != 0) {
+					return false;
+				}
+				foreach (Card futureCards in cardsOnBoard[boardSideOwner][1]) {
+					if (futureCards.GetCost() > 0) {
+						return false;
+					}
+				}
+				foreach (Card futureCards in cardsOnBoard[boardSideOwner][2]) {
+					if (futureCards.GetCost() > 0) {
+						return false;
+					}
+				}
+			}
+		}
 		card.onBoard = true;
 		cardsOnBoard[boardSideOwner][phaseIndex].Add(card);
 		card.phaseIndex = phaseIndex;
+		if (!boardSideOwner.player) {
+			card.phaseIndex += 3;
+		}
 		return true;
+	}
+
+	public int GetCardCount(Character boardSideOwner, int phaseIndex) {
+		if (phaseIndex > 2) {
+			phaseIndex -= 3;
+		}
+		return cardsOnBoard[boardSideOwner][phaseIndex].Count;
 	}
 
 	/// Removes a card by global index. 0-2 is the players cards while 3-5 represents opponents cards.
@@ -193,10 +268,13 @@ public class Board : MonoBehaviour {
 		if (startTurn != null) {
 			startTurn(); //might want to be at beginning of commence phase, idk
 		}
+		yield return StartCoroutine(enemy.DrawCard());
+		yield return StartCoroutine(player.DrawCard());
 	}
 
 	/// Ends the planning phase and starts to use the cards.
 	public IEnumerator Commence() {
+		yield return StartCoroutine(enemy.PlayAuto());
 		for (int i = 0; i < 3; i++) {
 			yield return CommencePhase(currentPhase);
 			if (endPhase != null) {
@@ -231,7 +309,6 @@ public class Board : MonoBehaviour {
 				attackCards.Add(card);
 			}
 		}
-		
 		nonAttackCards.AddRange(attackCards);
 		foreach (Card card in nonAttackCards) {
 			yield return StartCoroutine(card.Use());
@@ -239,7 +316,7 @@ public class Board : MonoBehaviour {
 	}
 
 	void Update() {
-		if (Input.GetKeyDown(KeyCode.Return)) {
+		if (Input.GetKeyDown(KeyCode.Return) && !running) {
 			StartCoroutine(Commence());
 		}
 	}

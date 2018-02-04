@@ -1142,7 +1142,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 4, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65197389628831370
 BoxCollider:
@@ -1166,7 +1166,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 4, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65214015055992020
 BoxCollider:
@@ -1178,7 +1178,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 4, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65248376228879200
 BoxCollider:
@@ -1202,7 +1202,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 4, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65652299639578842
 BoxCollider:
@@ -1214,7 +1214,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 4, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65658622807955452
 BoxCollider:
@@ -1226,7 +1226,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 4, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65727537619279656
 BoxCollider:
@@ -1321,12 +1321,12 @@ MonoBehaviour:
   playerHandPosition: {fileID: 4484108861139390}
   enemyHandPosition: {fileID: 4219184607648522}
   phasePositions:
-  - {fileID: 4084477733581820}
-  - {fileID: 4004836036600302}
-  - {fileID: 4515076693344712}
-  - {fileID: 4550332084352648}
-  - {fileID: 4347987453709266}
-  - {fileID: 4987785872536658}
+  - {fileID: 114262555313530226}
+  - {fileID: 114454052708693404}
+  - {fileID: 114891986505501754}
+  - {fileID: 114996842224474820}
+  - {fileID: 114145859942920446}
+  - {fileID: 114927679907769784}
 --- !u!114 &114891986505501754
 MonoBehaviour:
   m_ObjectHideFlags: 1
