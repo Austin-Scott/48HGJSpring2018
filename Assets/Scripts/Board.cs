@@ -55,6 +55,8 @@ public class Board : MonoBehaviour {
 		Board.player = player;
 		this.enemy = enemy;
 		SetPhaseCollider(false);
+
+        //TODO: Randomly assign cards to player's deck
 		Deck playerDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
@@ -64,7 +66,9 @@ public class Board : MonoBehaviour {
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardStab)));
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardPhysicallyFit)));
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardHalberdStrike)));
-		Deck enemyDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
+
+        //TODO: Assign predetermined decks to enemy
+        Deck enemyDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
 		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
 		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
 		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
@@ -73,14 +77,19 @@ public class Board : MonoBehaviour {
 		enemyDeck.AddCard(GameController.CreateCard(typeof(CardStab)));
 		enemyDeck.AddCard(GameController.CreateCard(typeof(CardPhysicallyFit)));
 		enemyDeck.AddCard(GameController.CreateCard(typeof(CardHalberdStrike)));
+
+        //Initializes both the player and the enemy and stacks their cards into their corresponding deck
 		yield return StartCoroutine(player.Initialize(15, 0, 0, playerDeck, true, enemy, this));
 		yield return StartCoroutine(enemy.Initialize(20, 1, 1,  enemyDeck, false, player, this));
+
 		cardsOnBoard.Add(player, new List<Card>[3]);
 		cardsOnBoard.Add(enemy, new List<Card>[3]);
 		for (int i = 0; i < 3; i++) {
 			cardsOnBoard[player][i] = new List<Card>();
 			cardsOnBoard[enemy][i] = new List<Card>();
 		}
+
+
 		yield return StartCoroutine(enemy.DrawCard());
 		yield return StartCoroutine(player.DrawCard());
 		yield return StartCoroutine(enemy.DrawCard());

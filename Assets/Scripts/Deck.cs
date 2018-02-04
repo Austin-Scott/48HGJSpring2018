@@ -51,6 +51,8 @@ public class Deck {
 			deckLocation = board.enemyDeckPosition;
 		}
 		Vector3 deckPosition = deckLocation.position;
+
+        //For each card in this deck, stack them into their character's deck
 		for (int i = 0; i < cards.Count; i++) {
 			movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].SmoothTransform(deckPosition, deckLocation.rotation));
 			deckPosition.y += 0.3f;
@@ -58,13 +60,15 @@ public class Deck {
 		foreach (Coroutine coroutine in movementCoroutines) {
 			yield return coroutine;
 		}
+
 	}
 
-	/// Sets the cards firendy and target properties.
+	/// Sets the cards friendy and target properties.
 	public void Initialize(Character holder, Character target, Board board, bool player) {
 		this.board = board;
 		this.player = player;
 		foreach (Card card in cards) {
+
 			card.Initialize(holder, target);
 		}
 	}

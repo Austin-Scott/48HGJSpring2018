@@ -139,6 +139,8 @@ public class Character : MonoBehaviour {
 
 		lastUsedCharacterID ++;
 		characterID = lastUsedCharacterID;
+
+        //Initialize deck position on board
 		Vector3 deckPosition;
 		if (player) {
 			deckPosition = new Vector3(10f, 0f, -5f);
@@ -146,6 +148,7 @@ public class Character : MonoBehaviour {
 			deckPosition = new Vector3(10f, 0f, 5f);
 		}
 		
+
 		yield return StartCoroutine(deck.PositionDeck(deckPosition));
 	}
 

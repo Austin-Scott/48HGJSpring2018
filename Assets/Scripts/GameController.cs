@@ -57,6 +57,8 @@ public class GameController : MonoBehaviour {
 	/// Initialize the game
 	void Start() {
 		currentBoard = Instantiate(boardPrefab);
+
+        //Stacks all the cards into their character's deck
 		StartCoroutine(currentBoard.Initialize(Instantiate(characterPrefab), Instantiate(characterPrefab)));
     }
 
