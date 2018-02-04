@@ -26,7 +26,9 @@ public abstract class Card : MonoBehaviour {
     public abstract IEnumerator Use();
 
 	/// Number of phases a card executes over.
+	[SerializeField]
 	protected int cost;
+	public int GetCost() { return cost; }
 
 	/// True if the card is on the board
 	public bool onBoard = false;
@@ -55,6 +57,7 @@ public abstract class Card : MonoBehaviour {
 
 	/// Position of the card on the board before it is moved for hover animation.
 	Vector3 positionBeforeHover;
+	Quaternion rotationBeforeHover;
 
 	/// The current hover or dehover routine.	
 	Coroutine hoverCoroutine;
@@ -81,14 +84,22 @@ public abstract class Card : MonoBehaviour {
 		dehovering = false;
 		if (hoverCoroutine != null) {
 			transform.position = positionBeforeHover;
+			transform.rotation = rotationBeforeHover;
 		} else {
 			positionBeforeHover = transform.position;
+			rotationBeforeHover = transform.rotation;
 		}
 		if (hoverCoroutine != null) {
 			StopCoroutine(hoverCoroutine);
 			// deHovering = false;
 		}
-		hoverCoroutine = StartCoroutine(LerpPosition(transform.position + Vector3.up * 2f, 2f));
+		Vector3 desiredPosition;
+		if (onBoard) {
+			desiredPosition = transform.position + Vector3.up * 2f;
+		} else {
+			desiredPosition = transform.position + new Vector3(0f, 5f, 4f);
+		}
+		hoverCoroutine = StartCoroutine(LerpTransform(desiredPosition, Quaternion.identity, 2f));
 		yield return hoverCoroutine;
 	}
 
@@ -101,11 +112,17 @@ public abstract class Card : MonoBehaviour {
 		if (hoverCoroutine != null) {
 			StopCoroutine(hoverCoroutine);
 		}
-		hoverCoroutine = StartCoroutine(LerpPosition(positionBeforeHover, 2f));
+		hoverCoroutine = StartCoroutine(LerpTransform(positionBeforeHover, rotationBeforeHover, 2f));
 		yield return hoverCoroutine;
 		hovering = false;
 		dehovering = false;
 		hoverCoroutine = null;
+	}
+
+	public IEnumerator PositionOnBoard() {
+		Vector3 desiredPosition = GameController.currentBoard.phasePositions[phaseIndex].transform.position + new Vector3(0f, 0.3f, -0.8f) * (GameController.currentBoard.GetCardCount(holder, phaseIndex)-1);
+		Quaternion desiredRotation = GameController.currentBoard.phasePositions[phaseIndex].transform.rotation;
+		yield return StartCoroutine(SmoothTransform(desiredPosition, desiredRotation));
 	}
 
 	public void DestroyAtEndOfTurn() {
@@ -117,6 +134,7 @@ public abstract class Card : MonoBehaviour {
 	}
 
 	public virtual IEnumerator Destroy() {
+		GameController.currentBoard.RemoveCard(this, holder, phaseIndex);
 		Destroy(gameObject);
 		yield break; //TODO destruction animation	
 	}
@@ -194,6 +212,7 @@ public abstract class Card : MonoBehaviour {
 			StopCoroutine(hoverCoroutine);
 			hoverCoroutine = null;
 			transform.position = positionBeforeHover;
+			transform.rotation = rotationBeforeHover;
 		}
 		yield return StartCoroutine(LerpTransform(desiredTransform, speed));
 	}
@@ -206,6 +225,7 @@ public abstract class Card : MonoBehaviour {
 			StopCoroutine(hoverCoroutine);
 			hoverCoroutine = null;
 			transform.position = positionBeforeHover;
+			transform.rotation = rotationBeforeHover;
 		}
 		yield return StartCoroutine(LerpTransform(desiredPosition, desiredRotation, speed));
 	}
@@ -240,6 +260,7 @@ public abstract class Card : MonoBehaviour {
 				// use the hitPoint to position the card.
 				transform.position = hitPoint;
 				positionBeforeHover = transform.position;
+				rotationBeforeHover = transform.rotation;
 			}
 		}
 	}
@@ -248,16 +269,18 @@ public abstract class Card : MonoBehaviour {
 		if ((hoverCoroutine == null || dehovering) && !grabbing && !onBoard && !inDeck) {
 			StartCoroutine(Hover());
 		}
-		if (Input.GetMouseButtonDown(0) && (!moving || hovering) && !inDeck && holder == Board.player) {
+		if (Input.GetMouseButtonDown(0) && (!moving || hovering) && !inDeck && holder == Board.player && !GameController.currentBoard.running) {
 			if (hoverCoroutine != null) {
 				StopCoroutine(hoverCoroutine);
 			}
 			if (onBoard) {
-				GameController.currentBoard.RemoveCard(this, holder, phaseIndex);
-				StartCoroutine(holder.AddCard(this));
+				StartCoroutine(holder.RemoveCardFromBoard(this, phaseIndex));
 			} else {
-				grabbing = true;
-				GameController.currentBoard.SetPhaseCollider(true);
+				// Make sure no cards are in the middle of moving
+				if (!holder.GetHandBusy()) {
+					grabbing = true;
+					GameController.currentBoard.SetPhaseCollider(true);
+				}
 			}
 		}
 	}
@@ -278,5 +301,9 @@ public abstract class Card : MonoBehaviour {
 	public virtual void Initialize(Character holder, Character target) {
 		this.holder = holder;
 		this.target = target;
+	}
+
+	public bool GetBusy() {
+		return (moving && !hovering && !dehovering);
 	}
 }

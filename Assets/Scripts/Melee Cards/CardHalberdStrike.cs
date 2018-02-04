@@ -5,11 +5,11 @@ using UnityEngine;
 public class CardHalberdStrike : MeleeCard {
 
 	public override IEnumerator Use() {
-        target.DamageToHealth(15);
-		return null;
+        target.DamageToHealth(CalculateDamage(15));
+		yield break;
 	}
 
 	public override void UpdateDamageText() {
-        text.text = "Deal (15) damage to health. Cannot be blocked.";
+        	text.text = "Deal (" + CalculateDamage(15) + ") damage to health.\nCannot be blocked.";
 	}
 }

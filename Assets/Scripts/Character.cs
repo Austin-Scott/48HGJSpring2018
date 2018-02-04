@@ -19,7 +19,7 @@ public class Character : MonoBehaviour {
     int maxHealth;
 
     /// The deck of the character
-    Deck deck;
+    public Deck deck;
 
     /// The board the character is on
     Board board;
@@ -259,11 +259,11 @@ public class Character : MonoBehaviour {
 		if (board.running) {
 			yield break;
 		}
-		board.AddCard(card, this, phaseIndex);
+		if (!board.AddCard(card, this, phaseIndex)) {
+			yield break;
+		}
 		hand.Remove(card);
-		Vector3 desiredPosition = board.phasePositions[phaseIndex].transform.position + Vector3.up * 0.3f;
-		Quaternion desiredRotation = board.phasePositions[phaseIndex].transform.rotation;
-		Coroutine moveCardRoutine = StartCoroutine(card.SmoothTransform(desiredPosition, desiredRotation));
+		Coroutine moveCardRoutine = StartCoroutine(card.PositionOnBoard());
 		Coroutine positionHandRoutine = StartCoroutine(PositionHand());
 		yield return moveCardRoutine;
 		yield return positionHandRoutine;
@@ -275,6 +275,25 @@ public class Character : MonoBehaviour {
 		}
 		board.RemoveCard(card, this, phaseIndex);
 		//TODO remove card animation
-		yield return StartCoroutine(AddCard(card));
+		int remaingCardCount = board.GetCardCount(this, phaseIndex);
+		Coroutine[] positionCardRoutines = new Coroutine[remaingCardCount];
+		Coroutine addCardRoutine = StartCoroutine(AddCard(card));
+		for (int i = 0; i < remaingCardCount; i++) {
+			positionCardRoutines[i] = StartCoroutine(board.GetCard(this, phaseIndex, i).PositionOnBoard());
+		}
+		yield return addCardRoutine;
+		foreach (Coroutine coroutine in positionCardRoutines) {
+			yield return coroutine;
+		}
+	}
+
+	/// Returns true if hand is busu
+	public bool GetHandBusy() {
+		foreach (Card card in hand) {
+			if (card.GetBusy()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
