@@ -8,14 +8,15 @@ public class HealthTextController : MonoBehaviour {
     Text text;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         text = GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        string health;
-        health = "Player health: " + Board.player.health + "\nEnemy health: " + GameController.currentBoard.enemy.health + "\n";
+        string health="";
+        //health = "Player health: " + Board.player.health;
+            //+ "\nEnemy health: " + GameController.currentBoard.enemy.health + "\n";
         text.text = health;
 	}
 }
