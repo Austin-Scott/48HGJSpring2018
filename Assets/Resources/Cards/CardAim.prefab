@@ -124,9 +124,9 @@ GameObject:
   - component: {fileID: 4590271293465230}
   - component: {fileID: 65288992908723416}
   - component: {fileID: 54177472819133256}
-  - component: {fileID: 114049617760786220}
+  - component: {fileID: 114883590917780078}
   m_Layer: 0
-  m_Name: CardBandage
+  m_Name: CardAim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -667,7 +667,7 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
---- !u!114 &114049617760786220
+--- !u!114 &114883590917780078
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -675,10 +675,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1589841279336656}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb9b9fde03423074aac61040b29703f2, type: 3}
+  m_Script: {fileID: 11500000, guid: c62344e8952eda944bc7f0a234908aac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 0
+  cost: 1
   onBoard: 0
   inDeck: 1
   titleText: {fileID: 102958106515203298}
