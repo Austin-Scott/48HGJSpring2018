@@ -363,16 +363,10 @@ public class Character : MonoBehaviour {
 				deck.AddNewCards(typeof(CardPunch), 2);
 				break;
 			case 1:
-				deck.AddNewCards(typeof(CardPistolShot), 5);
-				deck.AddNewCards(typeof(CardFranticThinking), 2);
-				deck.AddNewCards(typeof(CardOilWeapon), 2);
-				deck.AddNewCards(typeof(CardIntellectualism), 2);
+				deck.AddNewCards(typeof(CardPunch), 2);
 				break;
 			case 2:
-				deck.AddNewCards(typeof(CardSeduce), 2);
-				deck.AddNewCards(typeof(CardTerrify), 2);
-				deck.AddNewCards(typeof(CardTowerShield), 2);
-				deck.AddNewCards(typeof(CardStab), 2);
+				deck.AddNewCards(typeof(CardPunch), 2);
 				break;
 			default:
 				Debug.LogError("Enemy index out of bounds");
