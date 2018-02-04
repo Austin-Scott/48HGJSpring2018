@@ -14,6 +14,6 @@ public class CardSlash : MeleeCard {
 	}
 
 	public override void UpdateDamageText() {
-		text.text = "Deal (" + CalculateDamage(3) + ") damage if no shield is present.\nOtherwise deals 1 damage to shield.";
+		text.text = "Deal (" + CalculateDamage(3) + ") damage if no shield is\npresent. Otherwise deals 1\ndamage to shield.";
 	}
 }

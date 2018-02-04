@@ -133,11 +133,6 @@ public abstract class Card : MonoBehaviour {
 			if (Vector3.Distance(transform.position, desiredTransform.position) < 0.1f) {
 				transform.position = desiredTransform.position;
 			}
-			if (transform.rotation.eulerAngles.z >= 90 || transform.rotation.eulerAngles.z <= -90) {
-				SetAllText(false);
-			} else {
-				SetAllText(true);
-			}
 			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
 			yield return null;
 		}
@@ -156,12 +151,6 @@ public abstract class Card : MonoBehaviour {
 			}
 			if (Vector3.Distance(transform.position, desiredPosition) < 0.1f) {
 				transform.position = desiredPosition;
-			}
-			Debug.Log(transform.rotation.eulerAngles.z);
-			if (transform.rotation.eulerAngles.z >= 90 || transform.rotation.eulerAngles.z <= -90) {
-				SetAllText(false);
-			} else {
-				SetAllText(true);
 			}
 			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
 			yield return null;
@@ -284,11 +273,5 @@ public abstract class Card : MonoBehaviour {
 	public virtual void Initialize(Character holder, Character target) {
 		this.holder = holder;
 		this.target = target;
-	}
-
-	void SetAllText(bool active) {
-		titleText.gameObject.SetActive(active);
-		text.gameObject.SetActive(active);
-		costText.gameObject.SetActive(active);
 	}
 }

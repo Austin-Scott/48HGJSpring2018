@@ -56,6 +56,13 @@ public class Board : MonoBehaviour {
 		this.enemy = enemy;
 		Deck playerDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
 		yield return StartCoroutine(player.Initialize(15, 0, 0, playerDeck, true, enemy, this));
 		yield return StartCoroutine(enemy.Initialize(20, 1, 1,  new Deck(GameController.CreateCard(typeof(CardSlash))), false, player, this));
 		cardsOnBoard.Add(player, new List<Card>[3]);
@@ -64,6 +71,9 @@ public class Board : MonoBehaviour {
 			cardsOnBoard[player][i] = new List<Card>();
 			cardsOnBoard[enemy][i] = new List<Card>();
 		}
+		yield return StartCoroutine(player.DrawCard());
+		yield return StartCoroutine(player.DrawCard());
+		yield return StartCoroutine(player.DrawCard());
 		yield return StartCoroutine(player.DrawCard());
 		StartCoroutine(player.DrawCard());
 	}
