@@ -69,4 +69,8 @@ public class Deck {
 			card.Initialize(holder, target);
 		}
 	}
+
+	public void AddCard(Card card) {
+		cards.Add(card);
+	}
 }

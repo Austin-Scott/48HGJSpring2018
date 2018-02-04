@@ -110,27 +110,7 @@ public abstract class Card : MonoBehaviour {
 
 	/// Slerps the card's transofrm to a given transform over time. Speed of 1 is default.
 	private IEnumerator LerpTransform (Transform desiredTransform, float speed = 1f) {
-		moving = true;
-		while (transform.rotation != desiredTransform.rotation || transform.position != desiredTransform.position) {
-			float deltaTime = Time.deltaTime * 5f * speed;
-			transform.rotation = Quaternion.Slerp(transform.rotation, desiredTransform.rotation, deltaTime);
-			transform.position = Vector3.Slerp(transform.position, desiredTransform.position, deltaTime);
-			transform.localScale = Vector3.Slerp(transform.localScale, desiredTransform.localScale, deltaTime);
-			if (Quaternion.Angle(transform.rotation, desiredTransform.rotation) < 5f) {
-				transform.rotation = desiredTransform.rotation;
-			}
-			if (Vector3.Distance(transform.position, desiredTransform.position) < 0.1f) {
-				transform.position = desiredTransform.position;
-			}
-			if (transform.rotation.eulerAngles.z >= 90 || transform.rotation.eulerAngles.z <= -90) {
-				SetAllText(false);
-			} else {
-				SetAllText(true);
-			}
-			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
-			yield return null;
-		}
-		moving = false;
+		yield return StartCoroutine(LerpTransform(desiredTransform.position, desiredTransform.rotation, speed));
 	}
 
 	/// Slerps the card's transofrm to a given transform over time. Speed of 1 is default.
@@ -146,8 +126,8 @@ public abstract class Card : MonoBehaviour {
 			if (Vector3.Distance(transform.position, desiredPosition) < 0.1f) {
 				transform.position = desiredPosition;
 			}
-			Debug.Log(transform.rotation.eulerAngles.z);
-			if (transform.rotation.eulerAngles.z >= 90 || transform.rotation.eulerAngles.z <= -90) {
+			float rotationZ = transform.rotation.eulerAngles.z;
+			if ((rotationZ >= 90 && rotationZ <= 270) || (rotationZ <= -90 && rotationZ >= -270)) {
 				SetAllText(false);
 			} else {
 				SetAllText(true);
