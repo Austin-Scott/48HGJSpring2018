@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 4590271293465230}
   - component: {fileID: 65288992908723416}
   - component: {fileID: 54177472819133256}
-  - component: {fileID: 114574843334224678}
+  - component: {fileID: 114742504068015228}
   m_Layer: 0
   m_Name: CardStab
   m_TagString: Untagged
@@ -172,7 +172,7 @@ Transform:
   m_GameObject: {fileID: 1022920350514854}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.167, z: -0.779}
-  m_LocalScale: {x: 0.099999994, y: 0.10000005, z: 0.10000005}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 4590271293465230}
   m_RootOrder: 1
@@ -185,7 +185,7 @@ Transform:
   m_GameObject: {fileID: 1367561108320312}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.158, z: -1.51}
-  m_LocalScale: {x: 0.099999994, y: 0.10000005, z: 0.10000005}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 4590271293465230}
   m_RootOrder: 2
@@ -284,7 +284,7 @@ Transform:
   m_GameObject: {fileID: 1016656370076334}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.2, z: 1.78}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 4590271293465230}
   m_RootOrder: 0
@@ -618,10 +618,10 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 20
+  m_FontSize: 80
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 4ff901ec4b0aee84c983aae5cf0c4012, type: 3}
+  m_Font: {fileID: 12800000, guid: 8f0149cce2acdd0408186cdf2019a07e, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
@@ -632,17 +632,17 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1367561108320312}
-  m_Text: "Deal (1) damage. \nDeals 2 additional damage \nto health."
+  m_Text: 
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 0.67
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 20
+  m_FontSize: 50
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 4ff901ec4b0aee84c983aae5cf0c4012, type: 3}
+  m_Font: {fileID: 12800000, guid: 8f0149cce2acdd0408186cdf2019a07e, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
@@ -653,21 +653,21 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1016656370076334}
-  m_Text: Slash
+  m_Text: Stab
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 20
+  m_FontSize: 50
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 4ff901ec4b0aee84c983aae5cf0c4012, type: 3}
+  m_Font: {fileID: 12800000, guid: 8f0149cce2acdd0408186cdf2019a07e, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
---- !u!114 &114574843334224678
+--- !u!114 &114742504068015228
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}

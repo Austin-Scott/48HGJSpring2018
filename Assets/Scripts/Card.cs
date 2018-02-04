@@ -144,6 +144,11 @@ public abstract class Card : MonoBehaviour {
 		yield break; //TODO destruction animation	
 	}
 
+	/// Called when an character dies only.
+	public void ForceDestroy() {
+		Destroy(gameObject);
+	}
+
 	/// Slerps the card's transofrm to a given transform over time. Speed of 1 is default.
 	private IEnumerator LerpTransform (Transform desiredTransform, float speed = 1f) {
 		moving = true;
