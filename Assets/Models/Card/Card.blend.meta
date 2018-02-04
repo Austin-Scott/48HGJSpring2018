@@ -4,8 +4,39 @@ timeCreated: 1517709671
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
-  fileIDToRecycleName: {}
-  externalObjects: {}
+  fileIDToRecycleName:
+    100000: //RootNode
+    400000: //RootNode
+    2100000: Material_004
+    2100002: Material
+    2100004: Material_003
+    2100006: Material_001
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: Card
+    7400000: Default Take
+    9500000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: 1b0c811fbd693a34a897c710b4f055d0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_001
+    second: {fileID: 2100000, guid: 50c2e4702a1f28b4da0093bdc6685d4c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_003
+    second: {fileID: 2100000, guid: 52fd44bba4b9d4a4a8dbb3812037c1a2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material_004
+    second: {fileID: 2100000, guid: d2ca4dc5627a76549a49136d2749207a, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
