@@ -13,7 +13,7 @@ public class Character : MonoBehaviour {
     public int characterID { get; private set; }
 
     /// Health of the character. Duel is over when a character reaches 0 health.
-    int health = 15;
+    public int health = 15;
 
     /// Max health of the character.
     int maxHealth;

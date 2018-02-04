@@ -45,7 +45,7 @@ public class Board : MonoBehaviour {
 	public static Character player;
 
 	/// Enemy
-	Character enemy;
+	public Character enemy;
 
 	public IEnumerator Initialize(Character player, Character enemy) {
 		endTurn = null;

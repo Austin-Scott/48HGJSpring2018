@@ -6,7 +6,9 @@ public class CardPistolShot : RangedCard {
 
 	public override IEnumerator Use() {
         target.Damage(CalculateDamage(2));
-        yield return holder.AddCard(GameController.CreateCard(typeof(CardReload)));
+
+
+        DestroyAtEndOfTurn();
         yield break;
 	}
 

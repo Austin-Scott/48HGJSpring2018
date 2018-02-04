@@ -28,8 +28,8 @@ public class TextboxController : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-		if(controller==null)
-        {
+		
+        
             mainText = GetComponent<Text>();
             promptText = transform.GetComponentInChildren<Text>();
             panel = transform.parent.gameObject;
@@ -41,7 +41,7 @@ public class TextboxController : MonoBehaviour {
             promptText.text = "";
 
             controller = this;
-        }
+        
 	}
 
     public void Display(string str, Texture image=null)

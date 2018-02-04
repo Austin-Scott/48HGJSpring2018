@@ -8,7 +8,8 @@ public class CardBuckshot : RangedCard {
         target.Damage(CalculateDamage(1));
         target.Damage(CalculateDamage(1));
         target.Damage(CalculateDamage(1));
-        yield return holder.AddCard(GameController.CreateCard(typeof(CardReload)));
+
+        DestroyAtEndOfTurn();
         yield break;
 	}
 
