@@ -40,14 +40,18 @@ public abstract class Card : MonoBehaviour {
 	CardType cardType;
 
 	/// Text mesh of the title.
-	[SerializeField]
-	protected TextMesh titleText;
+	public TextMesh titleText;
 	/// Text mesh of the cost display.
-	[SerializeField]
-	protected TextMesh costText;
+	public TextMesh costText;
 	/// Text mesh of the text.
-	[SerializeField]
-	protected TextMesh text;
+	public TextMesh text;
+
+	public void GetAllComponents() {
+		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh>();
+		titleText = textMeshes[0];
+		costText = textMeshes[1];
+		text = textMeshes[2];
+	}
 
 	/// The character using the card
 	public Character holder { get; private set; }

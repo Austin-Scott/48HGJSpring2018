@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class MeleeCard : Card {
 
-	static System.Action UpdateMeleeCardDamageText;
+	public static System.Action UpdateMeleeCardDamageText;
 
 	public int CalculateDamage(int damage) {
 		return damage + holder.GetStrength();

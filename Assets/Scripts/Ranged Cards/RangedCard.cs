@@ -8,7 +8,7 @@ public abstract class RangedCard : Card {
 		return baseDamage + holder.GetDexterity();
 	}
 
-	static System.Action UpdateRangedCardDamageText;
+	public static System.Action UpdateRangedCardDamageText;
 
 	public abstract void UpdateDamageText();
 
