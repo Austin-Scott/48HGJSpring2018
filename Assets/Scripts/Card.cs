@@ -12,7 +12,17 @@ enum CardType {
 
 public abstract class Card : MonoBehaviour {
 
-	public abstract IEnumerator Use();
+    //Particle effects
+    ParticleSystemController ParticleController;
+    public void showParticles()
+    {
+        if(ParticleController!=null)
+        {
+            ParticleController.Explode();
+        }
+    }
+
+    public abstract IEnumerator Use();
 
 	/// Number of phases a card executes over.
 	protected int cost;
@@ -209,7 +219,7 @@ public abstract class Card : MonoBehaviour {
 	}
 
 	protected virtual void Awake() {
-
+        ParticleController = GetComponent<ParticleSystemController>();
 	}
 
 	protected virtual void Start() {
