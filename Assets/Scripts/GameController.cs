@@ -31,7 +31,7 @@ public class GameController : MonoBehaviour {
         //Load all cards into game
         cardDictionary.Add(typeof(CardSlash), Resources.Load("Cards/CardSlash", typeof(CardSlash)) as CardSlash);
         cardDictionary.Add(typeof(CardPsychUp), Resources.Load("Cards/CardPsychUp", typeof(CardPsychUp)) as CardPsychUp);
-        cardDictionary.Add(typeof(CardStab), Resources.Load("Cards/CardStab", typeof(CardStab)) as CardStab);
+        //cardDictionary.Add(typeof(CardStab), Resources.Load("Cards/CardStab", typeof(CardStab)) as CardStab);
         cardDictionary.Add(typeof(CardPhysicallyFit), Resources.Load("Cards/CardPhysicallyFit", typeof(CardPhysicallyFit)) as CardPhysicallyFit);
         cardDictionary.Add(typeof(CardHalberdStrike), Resources.Load("Cards/CardHalberdStrike", typeof(CardHalberdStrike)) as CardHalberdStrike);
         cardDictionary.Add(typeof(CardPunch), Resources.Load("Cards/CardPunch", typeof(CardPunch)) as CardPunch);
@@ -46,7 +46,7 @@ public class GameController : MonoBehaviour {
         cardDictionary.Add(typeof(CardQuickFingers), Resources.Load("Cards/CardQuickFingers", typeof(CardQuickFingers)) as CardQuickFingers);
         cardDictionary.Add(typeof(CardThrownDagger), Resources.Load("Cards/CardThrownDagger", typeof(CardThrownDagger)) as CardThrownDagger);
         cardDictionary.Add(typeof(CardOilWeapon), Resources.Load("Cards/CardOilWeapon", typeof(CardOilWeapon)) as CardOilWeapon);
-        cardDictionary.Add(typeof(CardAim), Resources.Load("Cards/CardAim", typeof(CardAim)) as CardAim);
+        //cardDictionary.Add(typeof(CardAim), Resources.Load("Cards/CardAim", typeof(CardAim)) as CardAim);
         cardDictionary.Add(typeof(CardRest), Resources.Load("Cards/CardRest", typeof(CardRest)) as CardRest);
         cardDictionary.Add(typeof(CardTowerShield), Resources.Load("Cards/CardTowerShield", typeof(CardTowerShield)) as CardTowerShield);
         cardDictionary.Add(typeof(CardBandage), Resources.Load("Cards/CardBandage", typeof(CardBandage)) as CardBandage);
