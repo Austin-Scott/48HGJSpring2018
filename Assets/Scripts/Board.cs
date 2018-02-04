@@ -54,7 +54,9 @@ public class Board : MonoBehaviour {
 		currentPhase = 0;
 		Board.player = player;
 		this.enemy = enemy;
-		yield return StartCoroutine(player.Initialize(15, 0, 0, new Deck(GameController.CreateCard(typeof(CardSlash))), true, enemy, this));
+		Deck playerDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		yield return StartCoroutine(player.Initialize(15, 0, 0, playerDeck, true, enemy, this));
 		yield return StartCoroutine(enemy.Initialize(20, 1, 1,  new Deck(GameController.CreateCard(typeof(CardSlash))), false, player, this));
 		cardsOnBoard.Add(player, new List<Card>[3]);
 		cardsOnBoard.Add(enemy, new List<Card>[3]);
@@ -62,6 +64,7 @@ public class Board : MonoBehaviour {
 			cardsOnBoard[player][i] = new List<Card>();
 			cardsOnBoard[enemy][i] = new List<Card>();
 		}
+		yield return StartCoroutine(player.DrawCard());
 		StartCoroutine(player.DrawCard());
 	}
 
@@ -163,22 +166,34 @@ public class Board : MonoBehaviour {
 					yield return StartCoroutine(player.AddCard(card));
 				}
 			}
+			for (int j = cardsOnBoard[player][i].Count-1; j >= 0; j--) {
+				cardsOnBoard[player][i].RemoveAt(j);
+			}
 			foreach (Card card in cardsOnBoard[enemy][i]) {
 				if (card != null) {
 					yield return StartCoroutine(enemy.AddCard(card));
 				}
 			}
+			for (int j = cardsOnBoard[enemy][i].Count-1; j >= 0; j--) {
+				cardsOnBoard[enemy][i].RemoveAt(j);
+			}
 		}
-		startTurn();
+		if (startTurn != null) {
+			startTurn(); //might want to be at beginning of commence phase, idk
+		}
 	}
 
 	/// Ends the planning phase and starts to use the cards.
 	public IEnumerator Commence() {
 		for (int i = 0; i < 3; i++) {
 			yield return CommencePhase(currentPhase);
-			endPhase();
+			if (endPhase != null) {
+				endPhase();
+			}
 		}
-		endTurn();
+		if (endTurn != null) {
+			endTurn();
+		}
 		StartCoroutine(NextTurn());
 	}
 
@@ -208,6 +223,12 @@ public class Board : MonoBehaviour {
 		nonAttackCards.AddRange(attackCards);
 		foreach (Card card in nonAttackCards) {
 			yield return StartCoroutine(card.Use());
+		}
+	}
+
+	void Update() {
+		if (Input.GetKeyDown(KeyCode.Return)) {
+			StartCoroutine(Commence());
 		}
 	}
 }

@@ -10,7 +10,7 @@ public class CardSlash : MeleeCard {
 		} else {
 			target.Damage(CalculateDamage(1));
 		}
-		return null;
+		yield break;
 	}
 
 	public override void UpdateDamageText() {

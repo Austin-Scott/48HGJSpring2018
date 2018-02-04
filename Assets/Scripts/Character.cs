@@ -51,7 +51,7 @@ public class Character : MonoBehaviour {
 	List<Card> hand = new List<Card>();
 
 	/// The shields the player has active.
-	List<Shield> shields;
+	List<Shield> shields = new List<Shield>();
 
 	/// Called when a character's shield is broken.
 	public void BreakShield(Shield shield) {
@@ -91,19 +91,20 @@ public class Character : MonoBehaviour {
 				damage = shields[0].Damage(damage);
 			}
 		}
-		if (damage > 0) {
+		if (damage <= 0) {
 			return false;
 		}
 		return DamageToHealth(damage);
 	}
 
-	/// Called only when the character has no shields up or is hit by an undodgable attack
+	/// Called only when the character has no shields up or is hit by an undodgable attack or damage breaks shields.
 	public bool DamageToHealth(int damage) {
         //TODO: Interupt channel cards
 		if (board.HasCard(typeof(CardAdrenalineRush), this)) {
 			IncreaseStrength(2);
 		}
 		health -= damage;
+		Debug.Log("Dealt " + damage + ". Character now has " + health + " health");
 		if (health <= 0) {
             if (!canSellSoul) {
                 return false;
@@ -194,9 +195,10 @@ public class Character : MonoBehaviour {
 			handLocation = board.enemyHandPosition;
 		}
 		Vector3 originalLocation = handLocation.position;
+		Quaternion originalRotation = handLocation.rotation;
 		int handCount = hand.Count;
 		int halfHandCount = handCount / 2;
-		float cardSeperation = 10f / handCount;
+		float cardSeperation = 1f;
 		Coroutine[] movementCoroutines = new Coroutine[handCount];
 		// if odd number of cards.
 		if (handCount % 2 == 1) {
@@ -204,30 +206,30 @@ public class Character : MonoBehaviour {
 			movementCoroutines[halfHandCount] = StartCoroutine(hand[halfHandCount].SmoothTransform(handLocation));
 			// fan cards left of the middle card
 			for (int i = halfHandCount - 1; i >= 0; i--) {
-				handLocation.position = originalLocation - new Vector3(cardSeperation*(halfHandCount-i), 0.2f, 0f);
-				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(handLocation));
-				//TODO rotate the cards to look natural
+				Vector3 newHandLocation = originalLocation + new Vector3(-cardSeperation*(halfHandCount-i), 0.2f*i, 0f);
+				Quaternion newRotation = originalRotation;
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation));
 			}
 			// fan cards right of the middle card
 			for (int i = halfHandCount + 1; i < handCount; i++) {
-				handLocation.position = originalLocation + new Vector3(cardSeperation*(i - halfHandCount), 0.2f, 0f);
-				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(handLocation));
-				//TODO rotate the cards to look natural
+				Quaternion newRotation = originalRotation;
+				Vector3 newHandLocation = originalLocation + new Vector3(cardSeperation*(i - halfHandCount), 0.2f*i, 0f);
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation));
 			}
 		}
 		// if even number of cards
 		else {
 			// fan cards left of the middle
 			for (int i = halfHandCount - 1; i >= 0; i--) {
-				handLocation.position = originalLocation - new Vector3(cardSeperation*(halfHandCount-i), 0.2f, 0f);
-				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(handLocation));
-				//TODO rotate the cards to look natural
+				Quaternion newRotation = originalRotation;
+				Vector3 newHandLocation = originalLocation + new Vector3(-cardSeperation*(halfHandCount-i), 0.2f*i, 0f);
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation));
 			}
 			// fan cards right of the middle
 			for (int i = halfHandCount; i < handCount; i++) {
-				handLocation.position = originalLocation + new Vector3(cardSeperation*(i - halfHandCount), 0.2f, 0f);
-				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(handLocation));
-				//TODO rotate the cards to look natural
+				Quaternion newRotation = originalRotation;
+				Vector3 newHandLocation = originalLocation + new Vector3(cardSeperation*(i - halfHandCount+1), 0.2f*i, 0f);
+				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation));
 			}
 		}
 
