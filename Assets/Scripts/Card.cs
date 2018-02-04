@@ -71,6 +71,8 @@ public abstract class Card : MonoBehaviour {
 	/// True while the player is dragging a card
 	bool grabbing = false;
 
+	public int phaseIndex = -1;
+
 	public virtual IEnumerator Hover() {
 		if (moving && !hovering) {
 			yield break;
@@ -133,11 +135,6 @@ public abstract class Card : MonoBehaviour {
 			if (Vector3.Distance(transform.position, desiredTransform.position) < 0.1f) {
 				transform.position = desiredTransform.position;
 			}
-			if (transform.rotation.eulerAngles.z >= 90 || transform.rotation.eulerAngles.z <= -90) {
-				SetAllText(false);
-			} else {
-				SetAllText(true);
-			}
 			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
 			yield return null;
 		}
@@ -156,12 +153,6 @@ public abstract class Card : MonoBehaviour {
 			}
 			if (Vector3.Distance(transform.position, desiredPosition) < 0.1f) {
 				transform.position = desiredPosition;
-			}
-			Debug.Log(transform.rotation.eulerAngles.z);
-			if (transform.rotation.eulerAngles.z >= 90 || transform.rotation.eulerAngles.z <= -90) {
-				SetAllText(false);
-			} else {
-				SetAllText(true);
 			}
 			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
 			yield return null;
@@ -230,6 +221,7 @@ public abstract class Card : MonoBehaviour {
 	protected virtual void Update() {
 		if (grabbing && Input.GetMouseButtonUp(0)) {
 			grabbing = false;
+			GameController.currentBoard.SetPhaseCollider(false);
 			//if not placed, put back in hand
 			if (!onBoard) {
 				StartCoroutine(holder.PositionHand());
@@ -253,7 +245,7 @@ public abstract class Card : MonoBehaviour {
 	}
 
 	protected virtual void OnMouseOver() {
-		if ((hoverCoroutine == null || dehovering) && !grabbing && !onBoard) {
+		if ((hoverCoroutine == null || dehovering) && !grabbing && !onBoard && !inDeck) {
 			StartCoroutine(Hover());
 		}
 		if (Input.GetMouseButtonDown(0) && (!moving || hovering) && !inDeck && holder == Board.player) {
@@ -261,9 +253,11 @@ public abstract class Card : MonoBehaviour {
 				StopCoroutine(hoverCoroutine);
 			}
 			if (onBoard) {
+				GameController.currentBoard.RemoveCard(this, holder, phaseIndex);
 				StartCoroutine(holder.AddCard(this));
 			} else {
 				grabbing = true;
+				GameController.currentBoard.SetPhaseCollider(true);
 			}
 		}
 	}
@@ -275,7 +269,7 @@ public abstract class Card : MonoBehaviour {
 	// }
 
 	protected virtual void OnMouseExit() {
-		if (!grabbing && !onBoard) {
+		if (!grabbing && !onBoard && !inDeck) {
 			StartCoroutine(DeHover());
 		}
 	}
@@ -284,11 +278,5 @@ public abstract class Card : MonoBehaviour {
 	public virtual void Initialize(Character holder, Character target) {
 		this.holder = holder;
 		this.target = target;
-	}
-
-	void SetAllText(bool active) {
-		titleText.gameObject.SetActive(active);
-		text.gameObject.SetActive(active);
-		costText.gameObject.SetActive(active);
 	}
 }

@@ -204,21 +204,30 @@ public class Character : MonoBehaviour {
 		Quaternion originalRotation = handLocation.rotation;
 		int handCount = hand.Count;
 		int halfHandCount = handCount / 2;
-		float cardSeperation = 1f;
+		float cardSeperation = 2f;
+		float rotationSeperation = 5f;
 		Coroutine[] movementCoroutines = new Coroutine[handCount];
 		// if odd number of cards.
 		if (handCount % 2 == 1) {
 			// move middle card to middle of hand
-			movementCoroutines[halfHandCount] = StartCoroutine(hand[halfHandCount].SmoothTransform(handLocation));
+			Quaternion middleRotation = originalRotation;
+			Vector3 middleHandLocation = originalLocation + new Vector3(0f, 0.2f*halfHandCount, 0f);
+			movementCoroutines[halfHandCount] = StartCoroutine(hand[halfHandCount].SmoothTransform(middleHandLocation, middleRotation));
 			// fan cards left of the middle card
 			for (int i = halfHandCount - 1; i >= 0; i--) {
-				Vector3 newHandLocation = originalLocation + new Vector3(-cardSeperation*(halfHandCount-i), 0.2f*i, 0f);
 				Quaternion newRotation = originalRotation;
+				Vector3 eulerAngles = newRotation.eulerAngles;
+				eulerAngles.y += -rotationSeperation * (halfHandCount-i);
+				newRotation.eulerAngles = eulerAngles;
+				Vector3 newHandLocation = originalLocation + new Vector3(-cardSeperation*(halfHandCount-i), 0.2f*i, 0f);
 				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation));
 			}
 			// fan cards right of the middle card
 			for (int i = halfHandCount + 1; i < handCount; i++) {
 				Quaternion newRotation = originalRotation;
+				Vector3 eulerAngles = newRotation.eulerAngles;
+				eulerAngles.y += rotationSeperation * (i - halfHandCount);
+				newRotation.eulerAngles = eulerAngles;
 				Vector3 newHandLocation = originalLocation + new Vector3(cardSeperation*(i - halfHandCount), 0.2f*i, 0f);
 				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation));
 			}
@@ -228,13 +237,19 @@ public class Character : MonoBehaviour {
 			// fan cards left of the middle
 			for (int i = halfHandCount - 1; i >= 0; i--) {
 				Quaternion newRotation = originalRotation;
+				Vector3 eulerAngles = newRotation.eulerAngles;
+				eulerAngles.y += -rotationSeperation * (halfHandCount-i);
+				newRotation.eulerAngles = eulerAngles;
 				Vector3 newHandLocation = originalLocation + new Vector3(-cardSeperation*(halfHandCount-i), 0.2f*i, 0f);
 				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation));
 			}
 			// fan cards right of the middle
 			for (int i = halfHandCount; i < handCount; i++) {
 				Quaternion newRotation = originalRotation;
-				Vector3 newHandLocation = originalLocation + new Vector3(cardSeperation*(i - halfHandCount+1), 0.2f*i, 0f);
+				Vector3 eulerAngles = newRotation.eulerAngles;
+				eulerAngles.y += rotationSeperation * (i - halfHandCount);
+				newRotation.eulerAngles = eulerAngles;
+				Vector3 newHandLocation = originalLocation + new Vector3(cardSeperation*(i - halfHandCount), 0.2f*i, 0f);
 				movementCoroutines[i] = StartCoroutine(hand[i].SmoothTransform(newHandLocation, newRotation));
 			}
 		}
@@ -252,8 +267,12 @@ public class Character : MonoBehaviour {
 		}
 		board.AddCard(card, this, phaseIndex);
 		hand.Remove(card);
-		yield return StartCoroutine(card.SmoothMove(board.phasePositions[phaseIndex].position + Vector3.up * 0.3f));
-		StartCoroutine(PositionHand());
+		Vector3 desiredPosition = board.phasePositions[phaseIndex].transform.position + Vector3.up * 0.3f;
+		Quaternion desiredRotation = board.phasePositions[phaseIndex].transform.rotation;
+		Coroutine moveCardRoutine = StartCoroutine(card.SmoothTransform(desiredPosition, desiredRotation));
+		Coroutine positionHandRoutine = StartCoroutine(PositionHand());
+		yield return moveCardRoutine;
+		yield return positionHandRoutine;
 	}
 
 	public IEnumerator RemoveCardFromBoard(Card card, int phaseIndex) {

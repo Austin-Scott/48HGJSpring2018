@@ -50,11 +50,10 @@ public class Deck {
 		} else {
 			deckLocation = board.enemyDeckPosition;
 		}
+		Vector3 deckPosition = deckLocation.position;
 		for (int i = 0; i < cards.Count; i++) {
-			movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].SmoothTransform(deckLocation));
-			Vector3 deckPosition = deckLocation.position;
+			movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].SmoothTransform(deckPosition, deckLocation.rotation));
 			deckPosition.y += 0.3f;
-			deckLocation.position = deckPosition;
 		}
 		foreach (Coroutine coroutine in movementCoroutines) {
 			yield return coroutine;

@@ -23,7 +23,7 @@ public class Board : MonoBehaviour {
 	// [SerializeField]
 	// Transform viewDrawnCardPosition;
 	[SerializeField]
-	public Transform[] phasePositions;
+	public PhaseSlot[] phasePositions;
 
 	/// True when a turn is commecning. If false, the player is in the planning phase, where he can move cards around on the board.
 	public bool running { 
@@ -54,7 +54,15 @@ public class Board : MonoBehaviour {
 		currentPhase = 0;
 		Board.player = player;
 		this.enemy = enemy;
+		SetPhaseCollider(false);
 		Deck playerDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
 		yield return StartCoroutine(player.Initialize(15, 0, 0, playerDeck, true, enemy, this));
 		yield return StartCoroutine(enemy.Initialize(20, 1, 1,  new Deck(GameController.CreateCard(typeof(CardSlash))), false, player, this));
@@ -64,6 +72,9 @@ public class Board : MonoBehaviour {
 			cardsOnBoard[player][i] = new List<Card>();
 			cardsOnBoard[enemy][i] = new List<Card>();
 		}
+		yield return StartCoroutine(player.DrawCard());
+		yield return StartCoroutine(player.DrawCard());
+		yield return StartCoroutine(player.DrawCard());
 		yield return StartCoroutine(player.DrawCard());
 		StartCoroutine(player.DrawCard());
 	}
@@ -101,6 +112,7 @@ public class Board : MonoBehaviour {
 	public bool AddCard(Card card, Character boardSideOwner, int phaseIndex) {
 		card.onBoard = true;
 		cardsOnBoard[boardSideOwner][phaseIndex].Add(card);
+		card.phaseIndex = phaseIndex;
 		return true;
 	}
 
@@ -229,6 +241,12 @@ public class Board : MonoBehaviour {
 	void Update() {
 		if (Input.GetKeyDown(KeyCode.Return)) {
 			StartCoroutine(Commence());
+		}
+	}
+
+	public void SetPhaseCollider (bool active) {
+		foreach (PhaseSlot phaseSlot in phasePositions) {
+			phaseSlot.gameObject.SetActive(active);
 		}
 	}
 }
