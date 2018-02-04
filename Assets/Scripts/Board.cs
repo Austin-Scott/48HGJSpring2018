@@ -59,24 +59,16 @@ public class Board : MonoBehaviour {
         //TODO: Randomly assign cards to player's deck
 		Deck playerDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardPsychUp)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardStab)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardPhysicallyFit)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardHalberdStrike)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardPistolShot)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardRest)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardFeign)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardIntimidate)));
 
         //TODO: Assign predetermined decks to enemy
-        Deck enemyDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
-		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		enemyDeck.AddCard(GameController.CreateCard(typeof(CardPsychUp)));
-		enemyDeck.AddCard(GameController.CreateCard(typeof(CardStab)));
-		enemyDeck.AddCard(GameController.CreateCard(typeof(CardPhysicallyFit)));
-		enemyDeck.AddCard(GameController.CreateCard(typeof(CardHalberdStrike)));
+        // Deck enemyDeck = enemy.CreateEnemyDeck(GameController.currentEnemyIndex);
+
+		Deck enemyDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
+		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
 
         //Initializes both the player and the enemy and stacks their cards into their corresponding deck
 		yield return StartCoroutine(player.Initialize(15, 0, 0, playerDeck, true, enemy, this));
@@ -88,8 +80,6 @@ public class Board : MonoBehaviour {
 			cardsOnBoard[player][i] = new List<Card>();
 			cardsOnBoard[enemy][i] = new List<Card>();
 		}
-
-
 		yield return StartCoroutine(enemy.DrawCard());
 		yield return StartCoroutine(player.DrawCard());
 		yield return StartCoroutine(enemy.DrawCard());
@@ -340,5 +330,22 @@ public class Board : MonoBehaviour {
 		foreach (PhaseSlot phaseSlot in phasePositions) {
 			phaseSlot.gameObject.SetActive(active);
 		}
+	}
+
+	public IEnumerator NextEnemy(int enemyIndex) {
+		enemy.DestroyAllCards();
+		Destroy(enemy.gameObject);
+		enemy = GameController.CreateEnemy();
+		//TODO yield return textbox
+		yield break;
+	}
+
+	/// Called only when the game is restarted
+	public void DeleteAll() {
+		enemy.DestroyAllCards();
+		player.DestroyAllCards();
+		Destroy(enemy.gameObject);
+		Destroy(player.gameObject);
+		Destroy(gameObject);
 	}
 }

@@ -137,6 +137,7 @@ public class Character : MonoBehaviour {
 		this.strength = strength;
 		this.dexterity = dexterity;
 		this.deck = deck;
+		deck.Shuffle();
 		this.board = board;
 		deck.Initialize(this, target, board, player);
 		this.player = player;
@@ -147,15 +148,8 @@ public class Character : MonoBehaviour {
 		characterID = lastUsedCharacterID;
 
         //Initialize deck position on board
-		Vector3 deckPosition;
-		if (player) {
-			deckPosition = new Vector3(10f, 0f, -5f);
-		} else {
-			deckPosition = new Vector3(10f, 0f, 5f);
-		}
-		
 
-		yield return StartCoroutine(deck.PositionDeck(deckPosition));
+		yield return StartCoroutine(deck.PositionDeck());
 	}
 
 	/// A bunch of functions so we can compare characters together. Important for the board/card dictionary.
@@ -199,6 +193,9 @@ public class Character : MonoBehaviour {
 	public IEnumerator DrawCard() {
 		Card card = deck.Draw();
 		/// TODO draw animation
+		if (card == null) {
+			yield break;
+		}
 		yield return StartCoroutine(AddCard(card));
 	}
 
@@ -352,5 +349,42 @@ public class Character : MonoBehaviour {
 				yield break;
 			}
 		}
+	}
+
+	public Deck CreateEnemyDeck(int enemyIndex) {
+		Deck deck = new Deck();
+		switch (enemyIndex) {
+			case 0:
+				deck.AddNewCards(typeof(CardPunch), 2);
+				break;
+			case 1:
+				deck.AddNewCards(typeof(CardPistolShot), 5);
+				deck.AddNewCards(typeof(CardFranticThinking), 2);
+				deck.AddNewCards(typeof(CardOilWeapon), 2);
+				deck.AddNewCards(typeof(CardIntellectualism), 2);
+				break;
+			case 2:
+				deck.AddNewCards(typeof(CardSeduce), 2);
+				deck.AddNewCards(typeof(CardTerrify), 2);
+				deck.AddNewCards(typeof(CardTowerShield), 2);
+				deck.AddNewCards(typeof(CardStab), 2);
+				break;
+			default:
+				Debug.LogError("Enemy index out of bounds");
+				break;
+		}
+		return deck;
+	}
+
+	/// Destoys all cards owned by the player.
+	public void DestroyAllCards() {
+		foreach (Card card in hand) {
+			Destroy(card.gameObject);
+		}
+		deck.DestroyAllCards();
+	}
+
+	public void ShuffleDeck() {
+		deck.Shuffle();
 	}
 }

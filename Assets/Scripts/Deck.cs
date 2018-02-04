@@ -17,7 +17,7 @@ public class Deck {
 	public Card Draw() {
 		int lastCardIndex = cards.Count - 1;
 		if (lastCardIndex < 0) {
-			return null; //TODO return a new instance of a card
+			return GameController.CreateCard(typeof(CardPunch));
 		}
 		Card card = cards[lastCardIndex];
 		cards.RemoveAt(lastCardIndex);
@@ -32,6 +32,9 @@ public class Deck {
 		cards = new List<Card>();
 		cards.Add(card);
 	}
+	public Deck() {
+		cards = new List<Card>();
+	}
 
     public bool containsCard(System.Type card)
     {
@@ -42,7 +45,7 @@ public class Deck {
         return false;
     }
 
-	public IEnumerator PositionDeck(Vector3 position) {
+	public IEnumerator PositionDeck() {
 		Coroutine[] movementCoroutines = new Coroutine[cards.Count];
 		Transform deckLocation;
 		if (player) {
@@ -68,12 +71,33 @@ public class Deck {
 		this.board = board;
 		this.player = player;
 		foreach (Card card in cards) {
-
 			card.Initialize(holder, target);
 		}
 	}
 
 	public void AddCard(Card card) {
 		cards.Add(card);
+	}
+
+	public void DestroyAllCards() {
+		foreach (Card card in cards) {
+			card.ForceDestroy();
+		}
+	}
+
+	public void AddNewCards(System.Type cardType, int quantity) {
+		for (int i = 0; i < quantity; i++) {
+			AddCard(GameController.CreateCard(cardType));
+		}
+	}
+
+	public void Shuffle() {
+		for (int i = 0; i < 100; i++) {
+			int randomIndex0 = Random.Range(0, cards.Count);
+			int randomIndex1 = Random.Range(0, cards.Count);
+			Card copy = cards[randomIndex0];
+			cards[randomIndex0] = cards[randomIndex1];
+			cards[randomIndex1] = copy;
+		}
 	}
 }

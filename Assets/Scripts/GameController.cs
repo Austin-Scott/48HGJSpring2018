@@ -13,6 +13,9 @@ public class GameController : MonoBehaviour {
 
 	public static Board currentBoard;
 
+    /// The current index of the current enemy
+    public static int currentEnemyIndex = -1;
+
     [SerializeField]
     Font cardFont;
     [SerializeField]
@@ -58,6 +61,7 @@ public class GameController : MonoBehaviour {
         cardDictionary.Add(typeof(CardIntimidate), Resources.Load("Cards/CardIntimidate", typeof(CardIntimidate)) as CardIntimidate);
         cardDictionary.Add(typeof(CardTerrify), Resources.Load("Cards/CardTerrify", typeof(CardTerrify)) as CardTerrify);
         cardDictionary.Add(typeof(CardFranticThinking), Resources.Load("Cards/CardFranticThinking", typeof(CardFranticThinking)) as CardFranticThinking);
+        cardDictionary.Add(typeof(CardFeign), Resources.Load("Cards/CardFeign", typeof(CardFeign)) as CardFeign);
         //TODO: Add the remaining cards when they are properly implemented
 
         foreach (KeyValuePair<System.Type, Card> card in cardDictionary) {
@@ -85,14 +89,12 @@ public class GameController : MonoBehaviour {
 
 	/// Initialize the game
 	void Start() {
-		currentBoard = Instantiate(boardPrefab);
-
-        //Stacks all the cards into their character's deck
-		StartCoroutine(currentBoard.Initialize(Instantiate(characterPrefab), Instantiate(characterPrefab)));
+        StartCoroutine(StartGame());
     }
 
 	/// Creates a card of type
 	public static Card CreateCard(System.Type cardType) {
+        if (cardType == typeof(CardSlash)) {Debug.Log("hello?"); }
 		return Instantiate(gameController.cardDictionary[cardType]);
 	}
 
@@ -101,4 +103,25 @@ public class GameController : MonoBehaviour {
 	public static Coroutine ControllerCoroutine(IEnumerator routine) {
 		return gameController.StartCoroutine(routine);
 	}
+
+    public IEnumerator StartGame() {
+        currentBoard = Instantiate(boardPrefab);
+        // Give player basic deck
+        //TODO initial text boxes (story and tutorial)
+        //Stacks all the cards into their character's deck
+		yield return StartCoroutine(currentBoard.Initialize(Instantiate(characterPrefab), CreateEnemy()));
+    }
+
+    public void RestartGame() {
+        StopAllCoroutines();
+        currentBoard.DeleteAll();
+        StartCoroutine(StartGame());
+    }
+
+    public static Character CreateEnemy() {
+        currentEnemyIndex++;
+        Character enemy = Instantiate(gameController.characterPrefab);
+        enemy.CreateEnemyDeck(currentEnemyIndex);
+        return enemy;
+    }
 }

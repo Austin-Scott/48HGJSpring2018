@@ -122,11 +122,11 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4590271293465230}
+  - component: {fileID: 114514411034480120}
   - component: {fileID: 65288992908723416}
   - component: {fileID: 54177472819133256}
-  - component: {fileID: 114474615650392204}
   m_Layer: 0
-  m_Name: CardThrownDagger
+  m_Name: CardFeign
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -653,7 +653,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1016656370076334}
-  m_Text: Slash
+  m_Text: Feign
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -667,7 +667,7 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
---- !u!114 &114474615650392204
+--- !u!114 &114514411034480120
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -675,7 +675,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1589841279336656}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee01fc21b11d4854da2e347d18b9dec0, type: 3}
+  m_Script: {fileID: 11500000, guid: da01a7bf2d3370a4b87a5e4877a5be7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cost: 0
