@@ -409,7 +409,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1016656370076334}
-  m_Text: Slash
+  m_Text: Testing
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -434,11 +434,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 008ef032cc078c64e8ce55f77b55138b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cost: 0
   onBoard: 0
   inDeck: 1
   titleText: {fileID: 102958106515203298}
   costText: {fileID: 102568629420123468}
   text: {fileID: 102695137378062684}
+  phaseIndex: -1
 --- !u!114 &114506090030518470
 MonoBehaviour:
   m_ObjectHideFlags: 1
