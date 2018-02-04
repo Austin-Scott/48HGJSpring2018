@@ -10,6 +10,6 @@ public class CardHalberdStrike : MeleeCard {
 	}
 
 	public override void UpdateDamageText() {
-        text.text = "Deal (15) damage to health. Cannot be blocked.";
+        text.text = "Deal (15) damage to health.\nCannot be blocked.";
 	}
 }

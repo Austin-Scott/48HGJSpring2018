@@ -14,6 +14,6 @@ public class CardPunch : MeleeCard {
 	}
 
 	public override void UpdateDamageText() {
-        text.text = "Deal (" + CalculateDamage(2) + ") damage. Lose 2 health if blocked.";
+        text.text = "Deal (" + CalculateDamage(2) + ") damage.\nLose 2 health if blocked.";
 	}
 }
