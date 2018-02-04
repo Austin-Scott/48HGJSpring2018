@@ -114,9 +114,7 @@ public class GameController : MonoBehaviour {
     }
 
     public void RestartGame() {
-        StopAllCoroutines();
-        currentBoard.DeleteAll();
-        StartCoroutine(StartGame());
+        Application.LoadLevel(Application.loadedLevel);
     }
 
     public static void RestartGameStaticMethod() {
@@ -125,7 +123,6 @@ public class GameController : MonoBehaviour {
 
     public static Character CreateEnemy() {
         Character enemy = Instantiate(gameController.characterPrefab);
-        // enemy.CreateEnemyDeck(currentEnemyIndex);
         return enemy;
     }
 }

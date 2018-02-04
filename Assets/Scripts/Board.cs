@@ -8,6 +8,8 @@ public class Board : MonoBehaviour {
 	public static System.Action startTurn;
 	public static System.Action endPhase;
 
+	public static List<Card> destroyedCards = new List<Card>();
+
 	[SerializeField]
 	public Transform playerDeckPosition;
 	[SerializeField]
@@ -56,13 +58,18 @@ public class Board : MonoBehaviour {
 		this.enemy = enemy;
 		SetPhaseCollider(false);
 
-        //TODO: Randomly assign cards to player's deck
-		Deck playerDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardPistolShot)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardRest)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardFeign)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardIntimidate)));
+		Deck playerDeck;
+		if (GameController.currentEnemyIndex == 0) {
+			playerDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
+			playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+			playerDeck.AddCard(GameController.CreateCard(typeof(CardPistolShot)));
+			playerDeck.AddCard(GameController.CreateCard(typeof(CardRest)));
+			playerDeck.AddCard(GameController.CreateCard(typeof(CardFeign)));
+			playerDeck.AddCard(GameController.CreateCard(typeof(CardIntimidate)));
+		} else {
+			playerDeck = player.deck;
+			// TODO return cards to player deck
+		}
 
         Deck enemyDeck = enemy.CreateEnemyDeck(GameController.currentEnemyIndex);
 
@@ -70,8 +77,8 @@ public class Board : MonoBehaviour {
 		// playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
 
         //Initializes both the player and the enemy and stacks their cards into their corresponding deck
-		yield return StartCoroutine(player.Initialize(15, 0, 0, playerDeck, true, enemy, this));
-		yield return StartCoroutine(enemy.Initialize(20, 1, 1,  enemyDeck, false, player, this));
+		yield return StartCoroutine(player.Initialize(15, 5, 5, playerDeck, true, enemy, this));
+		yield return StartCoroutine(enemy.Initialize(15, 0, 0,  enemyDeck, false, player, this));
 
 		cardsOnBoard.Add(player, new List<Card>[3]);
 		cardsOnBoard.Add(enemy, new List<Card>[3]);
@@ -316,7 +323,6 @@ public class Board : MonoBehaviour {
 		nonAttackCards.AddRange(attackCards);
 		foreach (Card card in nonAttackCards) {
 			if (card == null) { Debug.Log(card.holder.player); }
-			Debug.Log("hello");
 			yield return StartCoroutine(card.Use());
 		}
 	}
@@ -351,13 +357,12 @@ public class Board : MonoBehaviour {
 			}
 			cardsOnBoard[enemy][i] = new List<Card>();
 		}
-		if (enemy != null) {
-			enemy.DestroyAllCards();
-			Destroy(enemy.gameObject);
-		}
+		enemy.DestroyAllCards();
+		Destroy(enemy.gameObject);
 		enemy = GameController.CreateEnemy();
+		player.ShuffleBackDeck(destroyedCards);
 		//TODO yield return textbox
-		yield break;
+		yield return StartCoroutine(Initialize(player, enemy));
 	}
 
 	/// Called only when the game is restarted

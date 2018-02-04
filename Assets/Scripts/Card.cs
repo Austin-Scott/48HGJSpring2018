@@ -140,7 +140,12 @@ public abstract class Card : MonoBehaviour {
 
 	public virtual IEnumerator Destroy() {
 		GameController.currentBoard.RemoveCard(this, phaseIndex);
-		Destroy(gameObject);
+		if (holder.player) {
+			Board.destroyedCards.Add(this);
+			gameObject.SetActive(false);
+		} else {
+			Destroy(gameObject);
+		}
 		yield break; //TODO destruction animation	
 	}
 
@@ -314,6 +319,7 @@ public abstract class Card : MonoBehaviour {
 	public virtual void Initialize(Character holder, Character target) {
 		this.holder = holder;
 		this.target = target;
+		gameObject.SetActive(true);
 	}
 
 	public bool GetBusy() {
