@@ -64,18 +64,30 @@ public class Board : MonoBehaviour {
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardStab)));
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardPhysicallyFit)));
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardHalberdStrike)));
+		Deck enemyDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardPsychUp)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardStab)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardPhysicallyFit)));
+		enemyDeck.AddCard(GameController.CreateCard(typeof(CardHalberdStrike)));
 		yield return StartCoroutine(player.Initialize(15, 0, 0, playerDeck, true, enemy, this));
-		yield return StartCoroutine(enemy.Initialize(20, 1, 1,  new Deck(GameController.CreateCard(typeof(CardSlash))), false, player, this));
+		yield return StartCoroutine(enemy.Initialize(20, 1, 1,  enemyDeck, false, player, this));
 		cardsOnBoard.Add(player, new List<Card>[3]);
 		cardsOnBoard.Add(enemy, new List<Card>[3]);
 		for (int i = 0; i < 3; i++) {
 			cardsOnBoard[player][i] = new List<Card>();
 			cardsOnBoard[enemy][i] = new List<Card>();
 		}
+		yield return StartCoroutine(enemy.DrawCard());
 		yield return StartCoroutine(player.DrawCard());
+		yield return StartCoroutine(enemy.DrawCard());
 		yield return StartCoroutine(player.DrawCard());
+		yield return StartCoroutine(enemy.DrawCard());
 		yield return StartCoroutine(player.DrawCard());
-		yield return StartCoroutine(player.DrawCard());
+		yield return StartCoroutine(enemy.DrawCard());
 		yield return StartCoroutine(player.DrawCard());
 		currentPhase = 0;
 	}
@@ -166,10 +178,16 @@ public class Board : MonoBehaviour {
 		card.onBoard = true;
 		cardsOnBoard[boardSideOwner][phaseIndex].Add(card);
 		card.phaseIndex = phaseIndex;
+		if (!boardSideOwner.player) {
+			card.phaseIndex += 3;
+		}
 		return true;
 	}
 
 	public int GetCardCount(Character boardSideOwner, int phaseIndex) {
+		if (phaseIndex > 2) {
+			phaseIndex -= 3;
+		}
 		return cardsOnBoard[boardSideOwner][phaseIndex].Count;
 	}
 
@@ -250,10 +268,13 @@ public class Board : MonoBehaviour {
 		if (startTurn != null) {
 			startTurn(); //might want to be at beginning of commence phase, idk
 		}
+		yield return StartCoroutine(enemy.DrawCard());
+		yield return StartCoroutine(player.DrawCard());
 	}
 
 	/// Ends the planning phase and starts to use the cards.
 	public IEnumerator Commence() {
+		yield return StartCoroutine(enemy.PlayAuto());
 		for (int i = 0; i < 3; i++) {
 			yield return CommencePhase(currentPhase);
 			if (endPhase != null) {
@@ -288,7 +309,6 @@ public class Board : MonoBehaviour {
 				attackCards.Add(card);
 			}
 		}
-		
 		nonAttackCards.AddRange(attackCards);
 		foreach (Card card in nonAttackCards) {
 			yield return StartCoroutine(card.Use());
@@ -296,7 +316,7 @@ public class Board : MonoBehaviour {
 	}
 
 	void Update() {
-		if (Input.GetKeyDown(KeyCode.Return)) {
+		if (Input.GetKeyDown(KeyCode.Return) && !running) {
 			StartCoroutine(Commence());
 		}
 	}

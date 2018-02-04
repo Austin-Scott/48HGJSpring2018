@@ -130,11 +130,12 @@ public abstract class Card : MonoBehaviour {
 	}
 
 	public virtual void StartDestroyAnimation() {
+		Board.endTurn -= StartDestroyAnimation;
 		StartCoroutine(Destroy());
 	}
 
 	public virtual IEnumerator Destroy() {
-		GameController.currentBoard.RemoveCard(this, holder, phaseIndex);
+		GameController.currentBoard.RemoveCard(this, phaseIndex);
 		Destroy(gameObject);
 		yield break; //TODO destruction animation	
 	}
@@ -147,10 +148,10 @@ public abstract class Card : MonoBehaviour {
 			transform.rotation = Quaternion.Slerp(transform.rotation, desiredTransform.rotation, deltaTime);
 			transform.position = Vector3.Slerp(transform.position, desiredTransform.position, deltaTime);
 			transform.localScale = Vector3.Slerp(transform.localScale, desiredTransform.localScale, deltaTime);
-			if (Quaternion.Angle(transform.rotation, desiredTransform.rotation) < 5f) {
+			if (Quaternion.Angle(transform.rotation, desiredTransform.rotation) < 10f) {
 				transform.rotation = desiredTransform.rotation;
 			}
-			if (Vector3.Distance(transform.position, desiredTransform.position) < 0.1f) {
+			if (Vector3.Distance(transform.position, desiredTransform.position) < 1f) {
 				transform.position = desiredTransform.position;
 			}
 			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
@@ -166,10 +167,10 @@ public abstract class Card : MonoBehaviour {
 			float deltaTime = Time.deltaTime * 5f * speed;
 			transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, deltaTime);
 			transform.position = Vector3.Slerp(transform.position, desiredPosition, deltaTime);
-			if (Quaternion.Angle(transform.rotation, desiredRotation) < 5f) {
+			if (Quaternion.Angle(transform.rotation, desiredRotation) < 10f) {
 				transform.rotation = desiredRotation;
 			}
-			if (Vector3.Distance(transform.position, desiredPosition) < 0.1f) {
+			if (Vector3.Distance(transform.position, desiredPosition) < 1f) {
 				transform.position = desiredPosition;
 			}
 			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
@@ -182,9 +183,9 @@ public abstract class Card : MonoBehaviour {
 	private IEnumerator LerpPosition (Vector3 desiredPosition, float speed = 1f) {
 		moving = true;
 		while (transform.position != desiredPosition) {
-			float deltaTime = Time.deltaTime * 5 * speed;
+			float deltaTime = Time.deltaTime * 5f * speed;
 			transform.position = Vector3.Slerp(transform.position, desiredPosition, deltaTime);
-			if (Vector3.Distance(transform.position, desiredPosition) < 0.1f) {
+			if (Vector3.Distance(transform.position, desiredPosition) < 1f) {
 				transform.position = desiredPosition;
 			}
 			yield return null;
@@ -239,6 +240,9 @@ public abstract class Card : MonoBehaviour {
 	}
 
 	protected virtual void Update() {
+		if (holder != Board.player) {
+			return;
+		}
 		if (grabbing && Input.GetMouseButtonUp(0)) {
 			grabbing = false;
 			GameController.currentBoard.SetPhaseCollider(false);
@@ -266,10 +270,10 @@ public abstract class Card : MonoBehaviour {
 	}
 
 	protected virtual void OnMouseOver() {
-		if ((hoverCoroutine == null || dehovering) && !grabbing && !onBoard && !inDeck) {
+		if ((hoverCoroutine == null || dehovering) && !grabbing && !onBoard && !inDeck && holder.player == true) {
 			StartCoroutine(Hover());
 		}
-		if (Input.GetMouseButtonDown(0) && (!moving || hovering) && !inDeck && holder == Board.player && !GameController.currentBoard.running) {
+		if (Input.GetMouseButtonDown(0) && (!moving || hovering) && !inDeck && holder.player == true && !GameController.currentBoard.running) {
 			if (hoverCoroutine != null) {
 				StopCoroutine(hoverCoroutine);
 			}
@@ -292,7 +296,7 @@ public abstract class Card : MonoBehaviour {
 	// }
 
 	protected virtual void OnMouseExit() {
-		if (!grabbing && !onBoard && !inDeck) {
+		if (!grabbing && !onBoard && !inDeck && holder.player == true) {
 			StartCoroutine(DeHover());
 		}
 	}
