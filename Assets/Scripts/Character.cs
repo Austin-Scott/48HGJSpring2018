@@ -393,4 +393,15 @@ public class Character : MonoBehaviour {
 	public void ShuffleDeck() {
 		deck.Shuffle();
 	}
+
+	public void ShuffleBackDeck(List<Card> destoyedCards) {
+		for (int i = destoyedCards.Count-1; i >= 0; i--) {
+			deck.AddCard(destoyedCards[i]);
+			destoyedCards.RemoveAt(i);
+		}
+		for (int i = hand.Count-1; i >= 0; i--) {
+			deck.AddCard(hand[i]);
+			hand.RemoveAt(i);
+		}
+	}
 }
