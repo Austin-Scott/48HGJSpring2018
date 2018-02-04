@@ -7,15 +7,19 @@ public class TextboxController : MonoBehaviour {
 
     static TextboxController controller = null;
 
+    [SerializeField]
+    Texture defaultTexture;
+
     Text mainText;
     Text promptText;
     GameObject panel;
+    CanvasRenderer canvasRenderer;
 
     string prompt;
 
-    public static IEnumerator ShowText(string text)
+    public static IEnumerator ShowText(string text, Texture image=null)
     {
-        controller.Display(text);
+        controller.Display(text, image);
         while (!Input.anyKeyDown)
             yield return null;
         controller.Hide();
@@ -29,7 +33,9 @@ public class TextboxController : MonoBehaviour {
             mainText = GetComponent<Text>();
             promptText = transform.GetComponentInChildren<Text>();
             panel = transform.parent.gameObject;
+            canvasRenderer = panel.GetComponent<CanvasRenderer>();
 
+            
             panel.SetActive(false);
             prompt = promptText.text;
             promptText.text = "";
@@ -38,9 +44,17 @@ public class TextboxController : MonoBehaviour {
         }
 	}
 
-    public void Display(string str)
+    public void Display(string str, Texture image=null)
     {
         panel.SetActive(true);
+        if (image == null)
+        {
+            if(defaultTexture!=null)
+            canvasRenderer.SetTexture(defaultTexture);
+        } else
+        {
+            canvasRenderer.SetTexture(image);
+        }
         mainText.text = str;
         promptText.text = prompt;
     }
