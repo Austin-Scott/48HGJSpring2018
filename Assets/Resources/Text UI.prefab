@@ -75,7 +75,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.898}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9333397e01592e439c9037ee9844c44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultTexture: {fileID: 10906, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!222 &222102864132994684
 CanvasRenderer:
   m_ObjectHideFlags: 1
