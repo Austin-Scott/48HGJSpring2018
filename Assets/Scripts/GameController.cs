@@ -31,7 +31,7 @@ public class GameController : MonoBehaviour {
         //Load all cards into game
         cardDictionary.Add(typeof(CardSlash), Resources.Load("Cards/CardSlash", typeof(CardSlash)) as CardSlash);
         cardDictionary.Add(typeof(CardPsychUp), Resources.Load("Cards/CardPsychUp", typeof(CardPsychUp)) as CardPsychUp);
-        //cardDictionary.Add(typeof(CardStab), Resources.Load("Cards/CardStab", typeof(CardStab)) as CardStab);
+        cardDictionary.Add(typeof(CardStab), Resources.Load("Cards/CardStab", typeof(CardStab)) as CardStab);
         cardDictionary.Add(typeof(CardPhysicallyFit), Resources.Load("Cards/CardPhysicallyFit", typeof(CardPhysicallyFit)) as CardPhysicallyFit);
         cardDictionary.Add(typeof(CardHalberdStrike), Resources.Load("Cards/CardHalberdStrike", typeof(CardHalberdStrike)) as CardHalberdStrike);
         cardDictionary.Add(typeof(CardPunch), Resources.Load("Cards/CardPunch", typeof(CardPunch)) as CardPunch);
@@ -51,7 +51,7 @@ public class GameController : MonoBehaviour {
         cardDictionary.Add(typeof(CardTowerShield), Resources.Load("Cards/CardTowerShield", typeof(CardTowerShield)) as CardTowerShield);
         cardDictionary.Add(typeof(CardBandage), Resources.Load("Cards/CardBandage", typeof(CardBandage)) as CardBandage);
         cardDictionary.Add(typeof(CardDoctorsBag), Resources.Load("Cards/CardDoctorsBag", typeof(CardDoctorsBag)) as CardDoctorsBag);
-        cardDictionary.Add(typeof(CardPlan), Resources.Load("Cards/CardPlan", typeof(CardPlan)) as CardPlan);
+        // cardDictionary.Add(typeof(CardPlan), Resources.Load("Cards/CardPlan", typeof(CardPlan)) as CardPlan);
         cardDictionary.Add(typeof(CardPrayer), Resources.Load("Cards/CardPrayer", typeof(CardPrayer)) as CardPrayer);
         cardDictionary.Add(typeof(CardSeduce), Resources.Load("Cards/CardSeduce", typeof(CardSeduce)) as CardSeduce);
         cardDictionary.Add(typeof(CardIntellectualism), Resources.Load("Cards/CardIntellectualism", typeof(CardIntellectualism)) as CardIntellectualism);
