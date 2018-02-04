@@ -172,7 +172,7 @@ Transform:
   m_GameObject: {fileID: 1082674307646756}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.2, z: 1.78}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 4793624416191158}
   m_RootOrder: 0
@@ -185,7 +185,7 @@ Transform:
   m_GameObject: {fileID: 1238289179850050}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.158, z: -1.51}
-  m_LocalScale: {x: 0.099999994, y: 0.10000005, z: 0.10000005}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 4793624416191158}
   m_RootOrder: 2
@@ -198,7 +198,7 @@ Transform:
   m_GameObject: {fileID: 1389043440256666}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.167, z: -0.779}
-  m_LocalScale: {x: 0.099999994, y: 0.10000005, z: 0.10000005}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 4793624416191158}
   m_RootOrder: 1
@@ -618,10 +618,10 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 20
+  m_FontSize: 80
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 4ff901ec4b0aee84c983aae5cf0c4012, type: 3}
+  m_Font: {fileID: 12800000, guid: 8f0149cce2acdd0408186cdf2019a07e, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
@@ -639,10 +639,10 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 20
+  m_FontSize: 50
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 4ff901ec4b0aee84c983aae5cf0c4012, type: 3}
+  m_Font: {fileID: 12800000, guid: 8f0149cce2acdd0408186cdf2019a07e, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
@@ -660,10 +660,10 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 20
+  m_FontSize: 50
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 4ff901ec4b0aee84c983aae5cf0c4012, type: 3}
+  m_Font: {fileID: 12800000, guid: 8f0149cce2acdd0408186cdf2019a07e, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4278190080

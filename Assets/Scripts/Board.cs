@@ -325,7 +325,13 @@ public class Board : MonoBehaviour {
 	}
 
 	void Update() {
-		if (Input.GetKeyDown(KeyCode.Return) && !running) {
+		if (Input.GetKeyDown(KeyCode.Return)) {
+			FightButtonPressed();
+		}
+	}
+
+	public void FightButtonPressed() {
+		if (!running) {
 			StartCoroutine(Commence());
 		}
 	}

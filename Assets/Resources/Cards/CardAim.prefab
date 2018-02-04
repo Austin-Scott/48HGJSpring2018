@@ -237,10 +237,10 @@ Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1028802512267710}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.00005975191, y: 0, z: 0.000036578615}
-  m_LocalScale: {x: 1, y: 0.027444435, z: 1}
+  m_GameObject: {fileID: 1487308305433982}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.158, z: -1.51}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 4458425513639166}
   m_RootOrder: 0
@@ -268,10 +268,17 @@ Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
+<<<<<<< HEAD:Assets/Resources/Cards/CardAim.prefab
   m_GameObject: {fileID: 1000202450064806}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 0.14583333, y: 0.1875, z: 0.0020833334}
+=======
+  m_GameObject: {fileID: 1175545787576428}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.2, z: 1.78}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
+>>>>>>> dc53482ffb55825f600dc53827aed26aef448093:Assets/Resources/Cards/CardStab.prefab
   m_Children: []
   m_Father: {fileID: 4590271293465230}
   m_RootOrder: 3
@@ -288,6 +295,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4590271293465230}
   m_RootOrder: 0
+<<<<<<< HEAD:Assets/Resources/Cards/CardAim.prefab
+=======
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4534098976773370
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1110958252525224}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.167, z: -0.779}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4367788649224804}
+  m_RootOrder: 1
+>>>>>>> dc53482ffb55825f600dc53827aed26aef448093:Assets/Resources/Cards/CardStab.prefab
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!23 &23151944801589950
 MeshRenderer:
@@ -618,10 +641,10 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 20
+  m_FontSize: 50
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 4ff901ec4b0aee84c983aae5cf0c4012, type: 3}
+  m_Font: {fileID: 12800000, guid: 8f0149cce2acdd0408186cdf2019a07e, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
@@ -639,10 +662,10 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 20
+  m_FontSize: 50
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 4ff901ec4b0aee84c983aae5cf0c4012, type: 3}
+  m_Font: {fileID: 12800000, guid: 8f0149cce2acdd0408186cdf2019a07e, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
@@ -660,10 +683,10 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 20
+  m_FontSize: 80
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 4ff901ec4b0aee84c983aae5cf0c4012, type: 3}
+  m_Font: {fileID: 12800000, guid: 8f0149cce2acdd0408186cdf2019a07e, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4278190080

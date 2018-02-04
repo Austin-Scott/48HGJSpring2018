@@ -13,6 +13,17 @@ public class GameController : MonoBehaviour {
 
 	public static Board currentBoard;
 
+    [SerializeField]
+    Font cardFont;
+    [SerializeField]
+    Material fontMaterial;
+    [SerializeField]
+    int titleSize;
+    [SerializeField]
+    int costSize;
+    [SerializeField]
+    int textSize;
+
 	/// Load resources
 	void Awake() {
         gameController = this;
@@ -48,6 +59,24 @@ public class GameController : MonoBehaviour {
         cardDictionary.Add(typeof(CardTerrify), Resources.Load("Cards/CardTerrify", typeof(CardTerrify)) as CardTerrify);
         cardDictionary.Add(typeof(CardFranticThinking), Resources.Load("Cards/CardFranticThinking", typeof(CardFranticThinking)) as CardFranticThinking);
         //TODO: Add the remaining cards when they are properly implemented
+
+        foreach (KeyValuePair<System.Type, Card> card in cardDictionary) {
+            card.Value.GetAllComponents();
+            card.Value.titleText.font = cardFont;
+            card.Value.costText.font = cardFont;
+            card.Value.text.font = cardFont;
+            card.Value.titleText.fontSize = titleSize;
+            card.Value.costText.fontSize = costSize;
+            card.Value.text.fontSize = textSize;
+            card.Value.titleText.GetComponent<MeshRenderer>().sharedMaterial = fontMaterial;
+            card.Value.costText.GetComponent<MeshRenderer>().sharedMaterial = fontMaterial;
+            card.Value.text.GetComponent<MeshRenderer>().sharedMaterial = fontMaterial;
+            Vector3 scale = new Vector3(0.05f, 0.05f, 1f);
+            card.Value.titleText.transform.localScale = scale;
+            card.Value.costText.transform.localScale = scale;
+            card.Value.text.transform.localScale = scale;
+            card.Value.costText.text = card.Value.GetCost().ToString();
+        }
 
         boardPrefab = Resources.Load("Board", typeof(Board)) as Board;
 		characterPrefab = Resources.Load("Character", typeof(Character)) as Character;
