@@ -17,16 +17,6 @@ public class GameController : MonoBehaviour {
 	void Awake() {
         gameController = this;
 
-        boardPrefab = Resources.Load("Board", typeof(Board)) as Board;
-		characterPrefab = Resources.Load("Character", typeof(Character)) as Character;
-		Shield.SetShieldPrefab(Resources.Load("Shield", typeof(Shield)) as Shield);
-	}
-
-	/// Initialize the game
-	void Start() {
-		currentBoard = Instantiate(boardPrefab);
-		StartCoroutine(currentBoard.Initialize(Instantiate(characterPrefab), Instantiate(characterPrefab)));
-
         //Load all cards into game
         cardDictionary.Add(typeof(CardSlash), Resources.Load("Cards/CardSlash", typeof(CardSlash)) as CardSlash);
         /*
@@ -60,6 +50,18 @@ public class GameController : MonoBehaviour {
         cardDictionary.Add(typeof(CardFranticThinking), Resources.Load("Cards/CardFranticThinking", typeof(CardFranticThinking)) as CardFranticThinking);
         */
         //TODO: Add the remaining cards when they are properly implemented
+
+        boardPrefab = Resources.Load("Board", typeof(Board)) as Board;
+		characterPrefab = Resources.Load("Character", typeof(Character)) as Character;
+		Shield.SetShieldPrefab(Resources.Load("Shield", typeof(Shield)) as Shield);
+	}
+
+	/// Initialize the game
+	void Start() {
+		currentBoard = Instantiate(boardPrefab);
+		StartCoroutine(currentBoard.Initialize(Instantiate(characterPrefab), Instantiate(characterPrefab)));
+
+        
 
 
     }
