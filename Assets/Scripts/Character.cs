@@ -24,6 +24,12 @@ public class Character : MonoBehaviour {
     /// The board the character is on
     Board board;
 
+    public IEnumerator autoPlayCards()
+    {
+        //TODO: Add AI that chooses cards at random taking in account card costs
+        return null;
+    }
+
     //If true this character can sell their soul instead of dieing
     public bool canSellSoul { get; private set; }
     //If true this character has sold their soul and should receive a Souless type card
