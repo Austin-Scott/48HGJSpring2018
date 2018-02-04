@@ -62,10 +62,10 @@ public class Board : MonoBehaviour {
 		if (GameController.currentEnemyIndex == 0) {
 			playerDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
 			playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
-			playerDeck.AddCard(GameController.CreateCard(typeof(CardPistolShot)));
-			playerDeck.AddCard(GameController.CreateCard(typeof(CardRest)));
-			playerDeck.AddCard(GameController.CreateCard(typeof(CardFeign)));
-			playerDeck.AddCard(GameController.CreateCard(typeof(CardIntimidate)));
+			// playerDeck.AddCard(GameController.CreateCard(typeof(CardPistolShot)));
+			// playerDeck.AddCard(GameController.CreateCard(typeof(CardRest)));
+			// playerDeck.AddCard(GameController.CreateCard(typeof(CardFeign)));
+			// playerDeck.AddCard(GameController.CreateCard(typeof(CardIntimidate)));
 		} else {
 			playerDeck = player.deck;
 			// TODO return cards to player deck
@@ -77,7 +77,7 @@ public class Board : MonoBehaviour {
 		// playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
 
         //Initializes both the player and the enemy and stacks their cards into their corresponding deck
-		yield return StartCoroutine(player.Initialize(15, 5, 5, playerDeck, true, enemy, this));
+		yield return StartCoroutine(player.Initialize(15, 0, 0, playerDeck, true, enemy, this));
 		yield return StartCoroutine(enemy.Initialize(15, 0, 0,  enemyDeck, false, player, this));
 
 		cardsOnBoard.Add(player, new List<Card>[3]);
