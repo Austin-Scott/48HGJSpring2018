@@ -49,12 +49,12 @@ public class GameController : MonoBehaviour {
         cardDictionary.Add(typeof(CardQuickFingers), Resources.Load("Cards/CardQuickFingers", typeof(CardQuickFingers)) as CardQuickFingers);
         cardDictionary.Add(typeof(CardThrownDagger), Resources.Load("Cards/CardThrownDagger", typeof(CardThrownDagger)) as CardThrownDagger);
         cardDictionary.Add(typeof(CardOilWeapon), Resources.Load("Cards/CardOilWeapon", typeof(CardOilWeapon)) as CardOilWeapon);
-        //cardDictionary.Add(typeof(CardAim), Resources.Load("Cards/CardAim", typeof(CardAim)) as CardAim);
+        cardDictionary.Add(typeof(CardAim), Resources.Load("Cards/CardAim", typeof(CardAim)) as CardAim);
         cardDictionary.Add(typeof(CardRest), Resources.Load("Cards/CardRest", typeof(CardRest)) as CardRest);
         cardDictionary.Add(typeof(CardTowerShield), Resources.Load("Cards/CardTowerShield", typeof(CardTowerShield)) as CardTowerShield);
         cardDictionary.Add(typeof(CardBandage), Resources.Load("Cards/CardBandage", typeof(CardBandage)) as CardBandage);
         cardDictionary.Add(typeof(CardDoctorsBag), Resources.Load("Cards/CardDoctorsBag", typeof(CardDoctorsBag)) as CardDoctorsBag);
-        // cardDictionary.Add(typeof(CardPlan), Resources.Load("Cards/CardPlan", typeof(CardPlan)) as CardPlan);
+        cardDictionary.Add(typeof(CardPlan), Resources.Load("Cards/CardPlan", typeof(CardPlan)) as CardPlan);
         cardDictionary.Add(typeof(CardPrayer), Resources.Load("Cards/CardPrayer", typeof(CardPrayer)) as CardPrayer);
         cardDictionary.Add(typeof(CardSeduce), Resources.Load("Cards/CardSeduce", typeof(CardSeduce)) as CardSeduce);
         cardDictionary.Add(typeof(CardIntellectualism), Resources.Load("Cards/CardIntellectualism", typeof(CardIntellectualism)) as CardIntellectualism);
