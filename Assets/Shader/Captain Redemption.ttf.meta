@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: b4e9563ae3e0fc340befe6f26456985c
+timeCreated: 1517719880
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: 'Captain Redemption '
+  fontNames:
+  - 'Captain Redemption '
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
