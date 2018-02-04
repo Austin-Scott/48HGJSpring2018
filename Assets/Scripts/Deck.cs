@@ -13,11 +13,20 @@ public class Deck {
 	/// True if this deck belongs to the player
 	bool player;
 
+	/// target
+	Character target;
+
+	/// holder
+	Character holder;
+
 	/// removes the last card in the deck and returns it.
 	public Card Draw() {
 		int lastCardIndex = cards.Count - 1;
 		if (lastCardIndex < 0) {
-			return GameController.CreateCard(typeof(CardPunch));
+			Card newCard = GameController.CreateCard(typeof(CardPunch));
+			cards.Add(newCard);
+			Initialize(holder, target, board, player);
+			return Draw();
 		}
 		Card card = cards[lastCardIndex];
 		cards.RemoveAt(lastCardIndex);
@@ -68,6 +77,8 @@ public class Deck {
 
 	/// Sets the cards friendy and target properties.
 	public void Initialize(Character holder, Character target, Board board, bool player) {
+		this.holder = holder;
+		this.target = target;
 		this.board = board;
 		this.player = player;
 		foreach (Card card in cards) {

@@ -32,8 +32,6 @@ public class Character : MonoBehaviour {
 
     //If true this character can sell their soul instead of dieing
     public bool canSellSoul { get; private set; }
-    //If true this character has sold their soul and should receive a Souless type card
-    public bool soldSoul { get; private set; }
 
     /// Strength of the character. Increases melee attack damage by this value.
     int strength = 0;
@@ -116,18 +114,25 @@ public class Character : MonoBehaviour {
 			IncreaseStrength(2);
 		}
 		health -= damage;
-		Debug.Log("Dealt " + damage + ". Character now has " + health + " health");
 		if (health <= 0) {
-            if (!canSellSoul) {
-                return false;
+            if (canSellSoul /*&& !(soul in hand) */) {
+				// TODO if (! soul in hand) {
+					// TODO add soul to hand.
+					health = 1;
+					return false;
+				// }
             } else {
-                canSellSoul = false;
-                soldSoul = true;
-                health = 1;
-                return true;
-            }
+				// if dead
+				if (player) {
+					GameController.RestartGameStaticMethod();
+				} else {
+					GameController.ControllerCoroutine(board.NextEnemy());
+				}
+				return true;
+			}
 		}
-		return true;
+		// TODO change health display
+		return false;
 	}
 
 	/// Initializes a character at the beginning of a match.
@@ -142,7 +147,6 @@ public class Character : MonoBehaviour {
 		deck.Initialize(this, target, board, player);
 		this.player = player;
         this.canSellSoul = false;
-        this.soldSoul = false;
 
 		lastUsedCharacterID ++;
 		characterID = lastUsedCharacterID;
@@ -192,6 +196,7 @@ public class Character : MonoBehaviour {
 	/// Draws a card from the characters deck and adds it to the characters hand.
 	public IEnumerator DrawCard() {
 		Card card = deck.Draw();
+		yield return StartCoroutine(deck.PositionDeck());
 		/// TODO draw animation
 		if (card == null) {
 			yield break;
