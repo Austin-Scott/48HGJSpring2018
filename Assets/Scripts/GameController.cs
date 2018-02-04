@@ -28,36 +28,36 @@ public class GameController : MonoBehaviour {
 		StartCoroutine(currentBoard.Initialize(Instantiate(characterPrefab), Instantiate(characterPrefab)));
 
         //Load all cards into game
-        cardDictionary[typeof(CardSlash)] = new CardSlash();
-        cardDictionary[typeof(CardPsychUp)] = new CardPsychUp();
-        cardDictionary[typeof(CardStab)] = new CardStab();
-        cardDictionary[typeof(CardPhysicallyFit)] = new CardPhysicallyFit();
-        cardDictionary[typeof(CardHalberdStrike)] = new CardHalberdStrike();
-        cardDictionary[typeof(CardPunch)] = new CardPunch();
-        cardDictionary[typeof(CardSteroids)] = new CardSteroids();
-        cardDictionary[typeof(CardTackle)] = new CardTackle();
-        cardDictionary[typeof(CardPistolShot)] = new CardPistolShot();
-        cardDictionary[typeof(CardBuckshot)] = new CardBuckshot();
-        cardDictionary[typeof(CardLightningBolt)] = new CardLightningBolt();
-        cardDictionary[typeof(CardRifleShot)] = new CardRifleShot();
-        cardDictionary[typeof(CardReload)] = new CardReload();
-        cardDictionary[typeof(CardShowOff)] = new CardShowOff();
-        cardDictionary[typeof(CardQuickFingers)] = new CardQuickFingers();
-        cardDictionary[typeof(CardThrownDagger)] = new CardThrownDagger();
-        cardDictionary[typeof(CardOilWeapon)] = new CardOilWeapon();
-        cardDictionary[typeof(CardAim)] = new CardAim();
-        cardDictionary[typeof(CardRest)] = new CardRest();
-        cardDictionary[typeof(CardTowerShield)] = new CardTowerShield();
-        cardDictionary[typeof(CardBandage)] = new CardBandage();
-        cardDictionary[typeof(CardDoctorsBag)] = new CardDoctorsBag();
-        cardDictionary[typeof(CardPlan)] = new CardPlan();
-        cardDictionary[typeof(CardPrayer)] = new CardPrayer();
-        cardDictionary[typeof(CardSeduce)] = new CardSeduce();
-        cardDictionary[typeof(CardIntellectualism)] = new CardIntellectualism();
-        cardDictionary[typeof(CardIntimidate)] = new CardIntimidate();
-        cardDictionary[typeof(CardTerrify)] = new CardTerrify();
-        cardDictionary[typeof(CardSouless)] = new CardSouless();
-        cardDictionary[typeof(CardFranticThinking)] = new CardFranticThinking();
+        CreateCard(typeof(CardSlash));
+        CreateCard(typeof(CardPsychUp));
+        CreateCard(typeof(CardStab));
+        CreateCard(typeof(CardPhysicallyFit));
+        CreateCard(typeof(CardHalberdStrike));
+        CreateCard(typeof(CardPunch));
+        CreateCard(typeof(CardSteroids));
+        CreateCard(typeof(CardTackle));
+        CreateCard(typeof(CardPistolShot));
+        CreateCard(typeof(CardBuckshot));
+        CreateCard(typeof(CardLightningBolt));
+        CreateCard(typeof(CardRifleShot));
+        CreateCard(typeof(CardReload));
+        CreateCard(typeof(CardShowOff));
+        CreateCard(typeof(CardQuickFingers));
+        CreateCard(typeof(CardThrownDagger));
+        CreateCard(typeof(CardOilWeapon));
+        CreateCard(typeof(CardAim));
+        CreateCard(typeof(CardRest));
+        CreateCard(typeof(CardTowerShield));
+        CreateCard(typeof(CardBandage));
+        CreateCard(typeof(CardDoctorsBag));
+        CreateCard(typeof(CardPlan));
+        CreateCard(typeof(CardPrayer));
+        CreateCard(typeof(CardSeduce));
+        CreateCard(typeof(CardIntellectualism));
+        CreateCard(typeof(CardIntimidate));
+        CreateCard(typeof(CardTerrify));
+        CreateCard(typeof(CardSouless));
+        CreateCard(typeof(CardFranticThinking));
         //TODO: Add the remaining cards when they are properly implemented
 
 
