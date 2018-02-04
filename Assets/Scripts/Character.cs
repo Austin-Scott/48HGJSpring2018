@@ -76,6 +76,13 @@ public class Character : MonoBehaviour {
 			health = maxHealth;
 		}
 	}
+
+    public bool hasCard(System.Type card)
+    {
+        if (deck.containsCard(card)) return true;
+        if (board.HasCard(card, this)) return true;
+        return false;
+    }
 	
 	/// Generic damage function. Called whenever a card deals damage.
 	public bool Damage(int damage) {
@@ -98,11 +105,9 @@ public class Character : MonoBehaviour {
 		}
 		health -= damage;
 		if (health <= 0) {
-            if (!canSellSoul)
-            {
+            if (!canSellSoul) {
                 return false;
-            } else
-            {
+            } else {
                 canSellSoul = false;
                 soldSoul = true;
                 health = 1;

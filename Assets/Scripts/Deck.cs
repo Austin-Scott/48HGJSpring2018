@@ -33,11 +33,11 @@ public class Deck {
 		cards.Add(card);
 	}
 
-    public bool containsCard(Card card)
+    public bool containsCard(System.Type card)
     {
         foreach(Card c in cards)
         {
-            if (c.GetType() == card.GetType()) return true;
+            if (c.GetType() == card) return true;
         }
         return false;
     }

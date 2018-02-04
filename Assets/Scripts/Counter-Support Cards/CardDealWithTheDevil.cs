@@ -5,12 +5,22 @@ using UnityEngine;
 public class CardDealWithTheDevil : Card {
 
 	public override IEnumerator Use() {
-        
+        Board.endPhase += CheckSoul;
 		return null;
 	}
 
+    IEnumerable addSouless()
+    {
+        yield return holder.AddCard(GameController.CreateCard(typeof(CardSouless)));
+        yield break;
+    }
+
     public void CheckSoul()
     {
-        //TODO: add code to check if holder does not have a souless card and holder.soldSoul==true then give holder a CardSouless card
+        if(holder.soldSoul && !holder.hasCard(typeof(CardSouless)))
+        {
+            addSouless();
+            Board.endPhase -= CheckSoul;
+        }
     }
 }
