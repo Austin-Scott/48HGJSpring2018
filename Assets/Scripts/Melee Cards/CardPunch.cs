@@ -10,7 +10,7 @@ public class CardPunch : MeleeCard {
         {
             holder.Damage(2);
         }
-		return null;
+		yield break;
 	}
 
 	public override void UpdateDamageText() {

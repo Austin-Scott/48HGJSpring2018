@@ -27,7 +27,7 @@ public class TextboxController : MonoBehaviour {
     }
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		if(controller==null)
         {
             mainText = GetComponent<Text>();
