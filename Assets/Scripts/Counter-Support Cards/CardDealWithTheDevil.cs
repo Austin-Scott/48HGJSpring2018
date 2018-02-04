@@ -17,10 +17,11 @@ public class CardDealWithTheDevil : Card {
 
     public void CheckSoul()
     {
-        if(holder.soldSoul && !holder.hasCard(typeof(CardSouless)))
-        {
-            addSouless();
-            Board.endPhase -= CheckSoul;
-        }
+        //TODO
+        // if(holder.soldSoul && !holder.hasCard(typeof(CardSouless)))
+        // {
+        //     addSouless();
+        //     Board.endPhase -= CheckSoul;
+        // }
     }
 }

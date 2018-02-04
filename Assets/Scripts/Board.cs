@@ -64,11 +64,10 @@ public class Board : MonoBehaviour {
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardFeign)));
 		playerDeck.AddCard(GameController.CreateCard(typeof(CardIntimidate)));
 
-        //TODO: Assign predetermined decks to enemy
-        // Deck enemyDeck = enemy.CreateEnemyDeck(GameController.currentEnemyIndex);
+        Deck enemyDeck = enemy.CreateEnemyDeck(GameController.currentEnemyIndex);
 
-		Deck enemyDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
-		playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
+		// Deck enemyDeck = new Deck(GameController.CreateCard(typeof(CardSlash)));
+		// playerDeck.AddCard(GameController.CreateCard(typeof(CardSlash)));
 
         //Initializes both the player and the enemy and stacks their cards into their corresponding deck
 		yield return StartCoroutine(player.Initialize(15, 0, 0, playerDeck, true, enemy, this));
@@ -332,9 +331,12 @@ public class Board : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator NextEnemy(int enemyIndex) {
-		enemy.DestroyAllCards();
-		Destroy(enemy.gameObject);
+	public IEnumerator NextEnemy() {
+		GameController.currentEnemyIndex++;
+		if (enemy != null) {
+			enemy.DestroyAllCards();
+			Destroy(enemy.gameObject);
+		}
 		enemy = GameController.CreateEnemy();
 		//TODO yield return textbox
 		yield break;
