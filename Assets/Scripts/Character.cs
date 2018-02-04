@@ -2,45 +2,50 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum DamageType {
-	melee,
-	ranged
-};
-
 public class Character : MonoBehaviour {
 
-	bool player;
+    bool player;
 
-	/// The ID of the last character created.
-	public static int lastUsedCharacterID = -1;
+    /// The ID of the last character created.
+    public static int lastUsedCharacterID = -1;
 
-	/// The ID of the character
-	public int characterID { get; private set; }
+    /// The ID of the character
+    public int characterID { get; private set; }
 
-	/// Health of the character. Duel is over when a character reaches 0 health.
-	int health = 15;
+    /// Health of the character. Duel is over when a character reaches 0 health.
+    int health = 15;
 
-	/// Max health of the character.
+    /// Max health of the character.
     int maxHealth;
 
-	/// The deck of the character
-	Deck deck;
+    /// The deck of the character
+    Deck deck;
 
-	/// The board the character is on
-	Board board;
+    /// The board the character is on
+    Board board;
 
-	/// Strength of the character. Increases melee attack damage by this value.
-	int strength = 0;
+    //If true this character can sell their soul instead of dieing
+    public bool canSellSoul { get; private set; }
+    //If true this character has sold their soul and should receive a Souless type card
+    public bool soldSoul { get; private set; }
+
+    /// Strength of the character. Increases melee attack damage by this value.
+    int strength = 0;
 	public int GetStrength() { return strength; }
     public void IncreaseStrength(int amount) { strength += amount; }
 
-	/// Dextyerity of the character. Increase magic 
+	/// Dextyerity of the character. Increase ranged attacks 
 	int dexterity = 0;
 	public int GetDexterity() { return dexterity; }
     public void IncreaseDexterity(int amount) { dexterity += amount; }
 
-	/// Max number of cards in a players hand.
-	int maxHandSize = 8;
+    /// Max number of cards in a players hand.
+    int maxHandSize = 8;
+    public void changeMaxHandSize(int amount)
+    {
+        maxHandSize += amount;
+        if (maxHandSize < 1) maxHandSize -= amount;
+    }
 
 	/// Cards in the player's hand.
 	List<Card> hand = new List<Card>();
@@ -93,7 +98,16 @@ public class Character : MonoBehaviour {
 		}
 		health -= damage;
 		if (health <= 0) {
-			return true;
+            if (!canSellSoul)
+            {
+                return false;
+            } else
+            {
+                canSellSoul = false;
+                soldSoul = true;
+                health = 1;
+                return true;
+            }
 		}
 		return true;
 	}
@@ -108,6 +122,9 @@ public class Character : MonoBehaviour {
 		this.board = board;
 		deck.Initialize(this, target, board, player);
 		this.player = player;
+        this.canSellSoul = false;
+        this.soldSoul = false;
+
 		lastUsedCharacterID ++;
 		characterID = lastUsedCharacterID;
 		Vector3 deckPosition;

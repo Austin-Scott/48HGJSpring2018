@@ -5,7 +5,12 @@ using UnityEngine;
 public class CardDealWithTheDevil : Card {
 
 	public override IEnumerator Use() {
-        //TODO: For the rest of the game you can sell your soul instead of dieing
+        
 		return null;
 	}
+
+    public void CheckSoul()
+    {
+        //TODO: add code to check if holder does not have a souless card and holder.soldSoul==true then give holder a CardSouless card
+    }
 }

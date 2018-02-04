@@ -33,6 +33,15 @@ public class Deck {
 		cards.Add(card);
 	}
 
+    public bool containsCard(Card card)
+    {
+        foreach(Card c in cards)
+        {
+            if (c.GetType() == card.GetType()) return true;
+        }
+        return false;
+    }
+
 	public IEnumerator PositionDeck(Vector3 position) {
 		Coroutine[] movementCoroutines = new Coroutine[cards.Count];
 		for (int i = 0; i < cards.Count; i++) {

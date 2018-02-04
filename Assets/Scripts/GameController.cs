@@ -16,8 +16,10 @@ public class GameController : MonoBehaviour {
 	/// Load resources
 	void Awake() {
 		gameController = this;
-		cardDictionary.Add(typeof(CardSlash), Resources.Load("Cards/CardSlash", typeof(CardSlash)) as CardSlash); 
-		boardPrefab = Resources.Load("Board", typeof(Board)) as Board;
+
+        cardDictionary.Add(typeof(CardSlash), Resources.Load("Cards/CardSlash", typeof(CardSlash)) as CardSlash);
+
+        boardPrefab = Resources.Load("Board", typeof(Board)) as Board;
 		characterPrefab = Resources.Load("Character", typeof(Character)) as Character;
 		Shield.SetShieldPrefab(Resources.Load("Shield", typeof(Shield)) as Shield);
 	}
@@ -28,36 +30,37 @@ public class GameController : MonoBehaviour {
 		StartCoroutine(currentBoard.Initialize(Instantiate(characterPrefab), Instantiate(characterPrefab)));
 
         //Load all cards into game
-        CreateCard(typeof(CardSlash));
-        CreateCard(typeof(CardPsychUp));
-        CreateCard(typeof(CardStab));
-        CreateCard(typeof(CardPhysicallyFit));
-        CreateCard(typeof(CardHalberdStrike));
-        CreateCard(typeof(CardPunch));
-        CreateCard(typeof(CardSteroids));
-        CreateCard(typeof(CardTackle));
-        CreateCard(typeof(CardPistolShot));
-        CreateCard(typeof(CardBuckshot));
-        CreateCard(typeof(CardLightningBolt));
-        CreateCard(typeof(CardRifleShot));
-        CreateCard(typeof(CardReload));
-        CreateCard(typeof(CardShowOff));
-        CreateCard(typeof(CardQuickFingers));
-        CreateCard(typeof(CardThrownDagger));
-        CreateCard(typeof(CardOilWeapon));
-        CreateCard(typeof(CardAim));
-        CreateCard(typeof(CardRest));
-        CreateCard(typeof(CardTowerShield));
-        CreateCard(typeof(CardBandage));
-        CreateCard(typeof(CardDoctorsBag));
-        CreateCard(typeof(CardPlan));
-        CreateCard(typeof(CardPrayer));
-        CreateCard(typeof(CardSeduce));
-        CreateCard(typeof(CardIntellectualism));
-        CreateCard(typeof(CardIntimidate));
-        CreateCard(typeof(CardTerrify));
-        CreateCard(typeof(CardSouless));
-        CreateCard(typeof(CardFranticThinking));
+        //cardDictionary[typeof(CardSlash)] = Instantiate(CardSlash);
+        InitializeCard(typeof(CardSlash));
+        InitializeCard(typeof(CardPsychUp));
+        InitializeCard(typeof(CardStab));
+        InitializeCard(typeof(CardPhysicallyFit));
+        InitializeCard(typeof(CardHalberdStrike));
+        InitializeCard(typeof(CardPunch));
+        InitializeCard(typeof(CardSteroids));
+        InitializeCard(typeof(CardTackle));
+        InitializeCard(typeof(CardPistolShot));
+        InitializeCard(typeof(CardBuckshot));
+        InitializeCard(typeof(CardLightningBolt));
+        InitializeCard(typeof(CardRifleShot));
+        InitializeCard(typeof(CardReload));
+        InitializeCard(typeof(CardShowOff));
+        InitializeCard(typeof(CardQuickFingers));
+        InitializeCard(typeof(CardThrownDagger));
+        InitializeCard(typeof(CardOilWeapon));
+        InitializeCard(typeof(CardAim));
+        InitializeCard(typeof(CardRest));
+        InitializeCard(typeof(CardTowerShield));
+        InitializeCard(typeof(CardBandage));
+        InitializeCard(typeof(CardDoctorsBag));
+        InitializeCard(typeof(CardPlan));
+        InitializeCard(typeof(CardPrayer));
+        InitializeCard(typeof(CardSeduce));
+        InitializeCard(typeof(CardIntellectualism));
+        InitializeCard(typeof(CardIntimidate));
+        InitializeCard(typeof(CardTerrify));
+        InitializeCard(typeof(CardSouless));
+        InitializeCard(typeof(CardFranticThinking));
         //TODO: Add the remaining cards when they are properly implemented
 
 
@@ -67,6 +70,12 @@ public class GameController : MonoBehaviour {
 	public static Card CreateCard(System.Type cardType) {
 		return Instantiate(gameController.cardDictionary[cardType]);
 	}
+
+    public static void InitializeCard(System.Type cardType)
+    {
+        //TODO: fix bug here
+        gameController.cardDictionary[cardType] = new typeof(cardType)();
+    }
 
 	static GameController gameController;
 
