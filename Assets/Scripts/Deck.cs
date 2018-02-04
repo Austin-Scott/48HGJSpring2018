@@ -44,12 +44,17 @@ public class Deck {
 
 	public IEnumerator PositionDeck(Vector3 position) {
 		Coroutine[] movementCoroutines = new Coroutine[cards.Count];
+		Transform deckLocation;
+		if (player) {
+			deckLocation = board.playerDeckPosition;
+		} else {
+			deckLocation = board.enemyDeckPosition;
+		}
 		for (int i = 0; i < cards.Count; i++) {
-			if (player) {
-				movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].SmoothMove(board.playerDeckPosition.position));
-			} else {
-				movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].SmoothMove(board.enemyDeckPosition.position));
-			}
+			movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].SmoothTransform(deckLocation));
+			Vector3 deckPosition = deckLocation.position;
+			deckPosition.y += 0.3f;
+			deckLocation.position = deckPosition;
 		}
 		foreach (Coroutine coroutine in movementCoroutines) {
 			yield return coroutine;
