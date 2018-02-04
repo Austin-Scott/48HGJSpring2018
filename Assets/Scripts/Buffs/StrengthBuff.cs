@@ -14,7 +14,7 @@ public class StrengthBuff : Buff {
 		Board.endTurn += Revert;
 	}
 
-	void Revert () {
+	public override void Revert () {
 		character.IncreaseStrength(-amount);
 		Board.endTurn -= Revert;
 	}

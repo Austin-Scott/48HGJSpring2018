@@ -5,7 +5,8 @@ using UnityEngine;
 public class CardPlan : Card {
 
 	public override IEnumerator Use() {
-        //TODO: Draw 2 cards
-		return null;
+        yield return holder.DrawCard();
+        yield return holder.DrawCard();
+        yield break;
 	}
 }

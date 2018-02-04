@@ -6,7 +6,14 @@ public class CardArmor : Card {
 
 	public override IEnumerator Use() {
         Shield.CreateShield(3, holder);
-        //TODO: if shield breaks, destroy this card
+        //Add callback
+        Board.endTurn += onEndOfTurn;
 		return null;
 	}
+
+    public void onEndOfTurn()
+    {
+        //TODO: check if shield still exists
+        Board.endTurn -= onEndOfTurn;
+    }
 }

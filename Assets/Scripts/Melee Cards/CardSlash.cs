@@ -6,7 +6,7 @@ public class CardSlash : MeleeCard {
 
 	public override IEnumerator Use() {
 		if (target.getTotalShield() == 0) {
-			target.Damage(CalculateDamage(1)+2);
+			target.Damage(CalculateDamage(3));
 		} else {
 			target.Damage(CalculateDamage(1));
 		}
@@ -14,6 +14,6 @@ public class CardSlash : MeleeCard {
 	}
 
 	public override void UpdateDamageText() {
-		text.text = "Deal (" + CalculateDamage(1) + ") damage.\nDeal 2 additional \ndamage to health.";
+		text.text = "Deal (" + CalculateDamage(3) + ") damage if no shield is present.\nOtherwise deals 1 damage to shield.";
 	}
 }

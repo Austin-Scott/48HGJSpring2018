@@ -5,8 +5,10 @@ using UnityEngine;
 public class CardFranticThinking : Card {
 
 	public override IEnumerator Use() {
-        //TODO: Draw two cards
-        //TODO: Discard two cards
-		return null;
+        yield return holder.DiscardRandom();
+        yield return holder.DiscardRandom();
+        yield return holder.DrawCard();
+        yield return holder.DrawCard();
+        yield break;
 	}
 }
