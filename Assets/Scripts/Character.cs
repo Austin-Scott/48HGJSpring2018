@@ -383,6 +383,7 @@ public class Character : MonoBehaviour {
 
 	/// Destoys all cards owned by the player.
 	public void DestroyAllCards() {
+		Debug.Log("hello");
 		foreach (Card card in hand) {
 			Destroy(card.gameObject);
 		}

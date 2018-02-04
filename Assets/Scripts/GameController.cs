@@ -107,7 +107,7 @@ public class GameController : MonoBehaviour {
         currentBoard = Instantiate(boardPrefab);
         // Give player basic deck
 
-        //TODO initial text boxes (story and tutorial)
+        yield return StartCoroutine(TextboxController.ShowText("Welcom to the game"));
 
         //Stacks all the cards into their character's deck
 		yield return StartCoroutine(currentBoard.Initialize(Instantiate(characterPrefab), CreateEnemy()));
