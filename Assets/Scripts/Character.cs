@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Character : MonoBehaviour {
-
+	/// True if this character is the player.
     public bool player { get; private set; }
 
     /// The ID of the last character created.
@@ -23,12 +23,6 @@ public class Character : MonoBehaviour {
 
     /// The board the character is on
     Board board;
-
-    public IEnumerator autoPlayCards()
-    {
-        //TODO: Add AI that chooses cards at random taking in account card costs
-        return null;
-    }
 
     //If true this character can sell their soul instead of dieing
     public bool canSellSoul { get; private set; }
@@ -68,6 +62,7 @@ public class Character : MonoBehaviour {
 		shields.Remove(shield);
 	}
 
+	/// Returns value of all shields added up.
 	public int getTotalShield() {
 		int shieldTotal = 0;
 		foreach (Shield shield in shields) {
@@ -87,6 +82,7 @@ public class Character : MonoBehaviour {
 		}
 	}
 
+	/// Checks if character has card of type in hand.
     public bool hasCard(System.Type card)
     {
         if (deck.containsCard(card)) return true;
@@ -156,7 +152,7 @@ public class Character : MonoBehaviour {
 		yield return StartCoroutine(deck.PositionDeck());
 	}
 
-	/// A bunch of functions so we can compare characters together. Important for the board/card dictionary.
+	// A bunch of functions so we can compare characters together. Important for the board/card dictionary.
     public override int GetHashCode() {
         return characterID;
     }
@@ -292,6 +288,7 @@ public class Character : MonoBehaviour {
 		// Debug.Log("hand arranged");
 	}
 
+	/// Removes a card from the board at phase index (0-2), relative to character.
 	public IEnumerator RemoveCardFromBoard(Card card, int phaseIndex) {
 		if (board.running) {
 			yield break;
@@ -320,32 +317,32 @@ public class Character : MonoBehaviour {
 		return false;
 	}
 
+	/// Automatically chooses cards to play.
 	public IEnumerator PlayAuto () {
-		// List<Card>[] sortedCards = new List<Card>[4];
-		// for (int i = 0; i < 4; i++) {
-		// 	sortedCards[i] = new List<Card>();
-		// }
-		// foreach (Card card in hand) {
-		// 	sortedCards[card.GetCost()].Add(card);
-		// }
+		// List of cards the character can play. Initialize it to all cards in character's hand.
 		List<Card> canPlay = new List<Card>(hand);
+		// List of cards the character will play this turn.
 		List<Card> plannedToPlay = new List<Card>();
 		int time = 3;
+		// While the character still has time to spend.
 		while (time != 0) {
+			// Remove cards from canPlay that cost more than time remaining.
 			for (int i = canPlay.Count-1; i >= 0; i--) {
 				if (canPlay[i].GetCost() > time) {
 					canPlay.RemoveAt(i);
 				}
 			}
+			// End turn early if no remaining cards can be played.
 			if (canPlay.Count == 0) {
 				break;
 			}
-			// choose random card to play
+			// choose random card from canPlay to play. Decrease available time by its cost.
 			int randomCardIndex = Random.Range(0, canPlay.Count);
 			plannedToPlay.Add(canPlay[randomCardIndex]);
 			time -= canPlay[randomCardIndex].GetCost();
 			canPlay.RemoveAt(randomCardIndex);
 		}
+		// Place the cards planned to play on the board.
 		time = 0;
 		foreach (Card card in plannedToPlay) {
 			yield return PlaceCard(card, time);
@@ -356,6 +353,7 @@ public class Character : MonoBehaviour {
 		}
 	}
 
+	/// Creates a predefined enemy deck of enemyIndex.
 	public Deck CreateEnemyDeck(int enemyIndex) {
 		Deck deck = new Deck();
 		switch (enemyIndex) {
@@ -377,17 +375,18 @@ public class Character : MonoBehaviour {
 
 	/// Destoys all cards owned by the player.
 	public void DestroyAllCards() {
-		Debug.Log("hello");
 		foreach (Card card in hand) {
 			Destroy(card.gameObject);
 		}
 		deck.DestroyAllCards();
 	}
 
+	/// Shuffle's the player's deck.
 	public void ShuffleDeck() {
 		deck.Shuffle();
 	}
 
+	/// Called at end of game. Shuffle's players cards into deck from BOARD, hand, and destroyed cards.
 	public void ShuffleBackDeck(List<Card> destoyedCards) {
 		for (int i = destoyedCards.Count-1; i >= 0; i--) {
 			deck.AddCard(destoyedCards[i]);
@@ -397,5 +396,6 @@ public class Character : MonoBehaviour {
 			deck.AddCard(hand[i]);
 			hand.RemoveAt(i);
 		}
+		//TODO shuffle cards on board back into player's deck! Forogot to do this during game jam, thats why you lose your slashes when you kill an enemy.
 	}
 }

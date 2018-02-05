@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// Controls elements of the board
 public class Board : MonoBehaviour {
 
+	// events
 	public static System.Action endTurn;
 	public static System.Action startTurn;
 	public static System.Action endPhase;
 
+	/// Player's cards destroyed this game.
 	public static List<Card> destroyedCards = new List<Card>();
 
 	[SerializeField]
@@ -23,7 +26,7 @@ public class Board : MonoBehaviour {
 	[SerializeField]
 	public Transform enemyHandPosition;
 	// [SerializeField]
-	// Transform viewDrawnCardPosition;
+	// Transform viewDrawnCardPosition; //Could be implemented if you want the card to be shown to the player before putting it into hand.
 	[SerializeField]
 	public PhaseSlot[] phasePositions;
 
@@ -38,6 +41,7 @@ public class Board : MonoBehaviour {
 		}
 	}
 
+	/// Current phase of the game. 0 if planning. 1-3 for action phases.
 	public int currentPhase { get; private set; }
 
 	/// Dictionary relating the characters with the cards they own.
@@ -49,6 +53,7 @@ public class Board : MonoBehaviour {
 	/// Enemy
 	public Character enemy;
 
+	/// Initializes the board. Called everytime a new character is introduced.
 	public IEnumerator Initialize(Character player, Character enemy) {
 		endTurn = null;
 		startTurn = null;
@@ -128,8 +133,9 @@ public class Board : MonoBehaviour {
 
 	/// Sets a card by local index, relative to the character that owns the side of the board.
 	public bool AddCard(Card card, Character boardSideOwner, int phaseIndex) {
-		/// Check if any previous cards are using the phase the card is trying to be placed in.
+		// 0 cost cards can be placed anywhere.
 		if (card.GetCost() != 0) {
+			// Check if any previous cards are using the phase the card is trying to be placed in.
 			foreach (Card previousCards in cardsOnBoard[boardSideOwner][phaseIndex]) {
 				if (previousCards.GetCost() > 0) {
 					return false;
@@ -183,13 +189,16 @@ public class Board : MonoBehaviour {
 		card.onBoard = true;
 		cardsOnBoard[boardSideOwner][phaseIndex].Add(card);
 		card.phaseIndex = phaseIndex;
+		// convert relative phase index to global phase index.
 		if (!boardSideOwner.player) {
 			card.phaseIndex += 3;
 		}
 		return true;
 	}
 
+	/// Gets number of cards in a certain phase index.
 	public int GetCardCount(Character boardSideOwner, int phaseIndex) {
+		// convert to relative phase index if fed global one.
 		if (phaseIndex > 2) {
 			phaseIndex -= 3;
 		}
@@ -240,6 +249,7 @@ public class Board : MonoBehaviour {
 	// 	return false;
 	// }
 
+	/// Checks if a phase has already occurred or not.
 	public bool PhaseHasOccured(int phase) {
 		if (currentPhase > phase) {
 			return true;
@@ -292,6 +302,7 @@ public class Board : MonoBehaviour {
 		StartCoroutine(NextTurn());
 	}
 
+	/// Runs a single phase.
 	public IEnumerator CommencePhase(int phaseIndex) {
 		currentPhase++;
 		List<Card> playerCards = cardsOnBoard[player][phaseIndex];
@@ -320,31 +331,37 @@ public class Board : MonoBehaviour {
 				attackCards.Add(card);
 			}
 		}
+		// append nonattack cards with attack cards.
 		nonAttackCards.AddRange(attackCards);
+		// Use the cards, defensive ones first, attack ones next.
 		foreach (Card card in nonAttackCards) {
 			if (card == null) { Debug.Log(card.holder.player); }
 			yield return StartCoroutine(card.Use());
 		}
 	}
 
+	/// enter key commences
 	void Update() {
 		if (Input.GetKeyDown(KeyCode.Return)) {
 			FightButtonPressed();
 		}
 	}
 
+	/// Called when the fight button is pressed or enter key is pressed.
 	public void FightButtonPressed() {
 		if (!running) {
 			StartCoroutine(Commence());
 		}
 	}
 
+	/// Enables or disables all phases. Called when the player is dragging a card.
 	public void SetPhaseCollider (bool active) {
 		foreach (PhaseSlot phaseSlot in phasePositions) {
 			phaseSlot.gameObject.SetActive(active);
 		}
 	}
 
+	/// Setup board for next enemy.
 	public IEnumerator NextEnemy() {
 		GameController.currentEnemyIndex++;
 		for (int i = 0; i < 3; i++) {
