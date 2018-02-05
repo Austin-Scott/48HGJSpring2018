@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// Sets up the board, starts and restarts the game.
 public class GameController : MonoBehaviour {
 
 	Dictionary<System.Type, Card> cardDictionary = new Dictionary<System.Type, Card>();
@@ -11,19 +12,25 @@ public class GameController : MonoBehaviour {
 	/// Prefab for a character
 	Character characterPrefab;
 
+    /// Current board the player is playing on.
 	public static Board currentBoard;
 
     /// The current index of the current enemy
     public static int currentEnemyIndex = 0;
 
+    /// Universal settings for all cards
     [SerializeField]
     Font cardFont;
+    /// Universal settings for all cards
     [SerializeField]
     Material fontMaterial;
+    /// Universal settings for all cards
     [SerializeField]
     int titleSize;
+    /// Universal settings for all cards
     [SerializeField]
     int costSize;
+    /// Universal settings for all cards
     [SerializeField]
     int textSize;
 
@@ -64,6 +71,7 @@ public class GameController : MonoBehaviour {
         cardDictionary.Add(typeof(CardFeign), Resources.Load("Cards/CardFeign", typeof(CardFeign)) as CardFeign);
         //TODO: Add the remaining cards when they are properly implemented
 
+        // Apply global card settings to all cards.
         foreach (KeyValuePair<System.Type, Card> card in cardDictionary) {
             card.Value.GetAllComponents();
             card.Value.titleText.font = cardFont;
@@ -82,6 +90,7 @@ public class GameController : MonoBehaviour {
             card.Value.costText.text = card.Value.GetCost().ToString();
         }
 
+        // load remainging prefabs
         boardPrefab = Resources.Load("Board", typeof(Board)) as Board;
 		characterPrefab = Resources.Load("Character", typeof(Character)) as Character;
 		Shield.SetShieldPrefab(Resources.Load("Shield", typeof(Shield)) as Shield);
@@ -97,12 +106,15 @@ public class GameController : MonoBehaviour {
 		return Instantiate(gameController.cardDictionary[cardType]);
 	}
 
+    /// Instance of the gamecontroller in the scene.
     static GameController gameController;
 
+    /// Starts a coroutine from the gamecontroller instance. Useful for starting coroutines from non-monobehaviors.
 	public static Coroutine ControllerCoroutine(IEnumerator routine) {
 		return gameController.StartCoroutine(routine);
 	}
 
+    /// Starts the games.
     public IEnumerator StartGame() {
         currentBoard = Instantiate(boardPrefab);
         // Give player basic deck
@@ -113,14 +125,19 @@ public class GameController : MonoBehaviour {
 		yield return StartCoroutine(currentBoard.Initialize(Instantiate(characterPrefab), CreateEnemy()));
     }
 
+    /// Restarts the game
     public void RestartGame() {
+        //TODO fix bug where player's cards are not created again.
+        GameController.currentEnemyIndex = 0; // This may have fixed previously mentioned bug. (untested)
         Application.LoadLevel(Application.loadedLevel);
     }
 
+    /// Restarts the game. Static.
     public static void RestartGameStaticMethod() {
         gameController.RestartGame();
     }
 
+    /// Creates and returns a new enemy.
     public static Character CreateEnemy() {
         Character enemy = Instantiate(gameController.characterPrefab);
         return enemy;

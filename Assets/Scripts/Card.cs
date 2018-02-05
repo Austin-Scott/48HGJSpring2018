@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum CardType {
-	Melee,
-	Ranged,
-	Defense,
-	White,
-	Black
-};
+// enum CardType {
+// 	Melee,
+// 	Ranged,
+// 	Defense,
+// 	White,
+// 	Black
+// };
 
+/// Basic card characteristics
 public abstract class Card : MonoBehaviour {
 
     //Particle effects
     ParticleSystemController ParticleController;
+
     public IEnumerator showParticles()
     {
         if(ParticleController!=null)
@@ -23,6 +25,7 @@ public abstract class Card : MonoBehaviour {
         yield break;
     }
 
+	/// Called when a card is used. NOT when a card is played on the board.
     public abstract IEnumerator Use();
 
 	/// Number of phases a card executes over.
@@ -46,6 +49,7 @@ public abstract class Card : MonoBehaviour {
 	/// Text mesh of the text.
 	public TextMesh text;
 
+	/// Fetches all neccessary components for the card to use.
 	public void GetAllComponents() {
 		TextMesh[] textMeshes = GetComponentsInChildren<TextMesh>();
 		titleText = textMeshes[0];
@@ -61,6 +65,7 @@ public abstract class Card : MonoBehaviour {
 
 	/// Position of the card on the board before it is moved for hover animation.
 	Vector3 positionBeforeHover;
+	/// Rotation of the card on the board before it is moved by a hover animation.
 	Quaternion rotationBeforeHover;
 
 	/// The current hover or dehover routine.	
@@ -78,8 +83,10 @@ public abstract class Card : MonoBehaviour {
 	/// True while the player is dragging a card
 	bool grabbing = false;
 
+	/// The phase index the card is placed into.
 	public int phaseIndex = -1;
 
+	/// Hovers the card so the player can see it better.
 	public virtual IEnumerator Hover() {
 		if (moving && !hovering) {
 			yield break;
@@ -107,6 +114,7 @@ public abstract class Card : MonoBehaviour {
 		yield return hoverCoroutine;
 	}
 
+	/// Dehovers the card.
 	public virtual IEnumerator DeHover() {
 		if (moving && !hovering) {
 			yield break;
@@ -123,21 +131,27 @@ public abstract class Card : MonoBehaviour {
 		hoverCoroutine = null;
 	}
 
+	/// Used for position a card on the board.
 	public IEnumerator PositionOnBoard() {
+		// Shift the card slightly based on how many other cards are in the same phase slot.
 		Vector3 desiredPosition = GameController.currentBoard.phasePositions[phaseIndex].transform.position + new Vector3(0f, 0.3f, -0.8f) * (GameController.currentBoard.GetCardCount(holder, phaseIndex)-1);
 		Quaternion desiredRotation = GameController.currentBoard.phasePositions[phaseIndex].transform.rotation;
 		yield return StartCoroutine(SmoothTransform(desiredPosition, desiredRotation));
 	}
 
+	/// Marks a card to be destroyed at the end of the turn.
 	public void DestroyAtEndOfTurn() {
 		Board.endTurn += StartDestroyAnimation;
 	}
 
+	/// Start the destruction process of the card.
 	public virtual void StartDestroyAnimation() {
 		Board.endTurn -= StartDestroyAnimation;
 		StartCoroutine(Destroy());
 	}
 
+	/// If a player card, add it to Board.destroyed cards so it can be put back into the player's deck at the end of the game. 
+	/// Else, destroy it.
 	public virtual IEnumerator Destroy() {
 		GameController.currentBoard.RemoveCard(this, phaseIndex);
 		if (holder.player) {
@@ -154,7 +168,7 @@ public abstract class Card : MonoBehaviour {
 		Destroy(gameObject);
 	}
 
-	/// Slerps the card's transofrm to a given transform over time. Speed of 1 is default.
+	/// Slerps the card's transform to a given transform over time. Speed of 1 is default.
 	private IEnumerator LerpTransform (Transform desiredTransform, float speed = 1f) {
 		moving = true;
 		while (transform.rotation != desiredTransform.rotation || transform.position != desiredTransform.position) {
@@ -254,9 +268,11 @@ public abstract class Card : MonoBehaviour {
 	}
 
 	protected virtual void Update() {
+		/// Only player's cards can be interacted with.
 		if (holder != Board.player) {
 			return;
 		}
+		/// Player lets go of card.
 		if (grabbing && Input.GetMouseButtonUp(0)) {
 			grabbing = false;
 			GameController.currentBoard.SetPhaseCollider(false);
@@ -265,6 +281,7 @@ public abstract class Card : MonoBehaviour {
 				StartCoroutine(holder.PositionHand());
 			}
 		}
+		/// Player is currently holding card.
 		if (grabbing) {
 			// this creates a horizontal plane passing through this object's center
 			Plane plane = new Plane(new Vector3(0f, 0.3f, 0f), Vector3.up);
@@ -272,10 +289,12 @@ public abstract class Card : MonoBehaviour {
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			// plane.Raycast returns the distance from the ray start to the hit point
 			float distance;
+			// I don't think this should ever return false.
 			if (plane.Raycast(ray, out distance)){
 				// some point of the plane was hit - get its coordinates
 				Vector3 hitPoint = ray.GetPoint(distance);
 				// use the hitPoint to position the card.
+				// Move card to cursor's position on a 3d plane of the board.
 				transform.position = hitPoint;
 				positionBeforeHover = transform.position;
 				rotationBeforeHover = transform.rotation;
@@ -283,16 +302,21 @@ public abstract class Card : MonoBehaviour {
 		}
 	}
 
+	/// Called when player is mousing over a card
 	protected virtual void OnMouseOver() {
+		/// If card is in hand and not busy, hover it so player can see it better.
 		if ((hoverCoroutine == null || dehovering) && !grabbing && !onBoard && !inDeck && holder.player == true) {
 			StartCoroutine(Hover());
 		}
+		/// Clicked on card and card is not busy
 		if (Input.GetMouseButtonDown(0) && (!moving || hovering) && !inDeck && holder.player == true && !GameController.currentBoard.running) {
 			if (hoverCoroutine != null) {
 				StopCoroutine(hoverCoroutine);
 			}
+			// Remove card from board
 			if (onBoard) {
 				StartCoroutine(holder.RemoveCardFromBoard(this, phaseIndex));
+			// Grab card if not busy.
 			} else {
 				// Make sure no cards are in the middle of moving
 				if (!holder.GetHandBusy()) {
@@ -309,6 +333,7 @@ public abstract class Card : MonoBehaviour {
 	// 	}
 	// }
 
+	/// If hovering, dehover.
 	protected virtual void OnMouseExit() {
 		if (!grabbing && !onBoard && !inDeck && holder.player == true) {
 			StartCoroutine(DeHover());
@@ -322,6 +347,7 @@ public abstract class Card : MonoBehaviour {
 		gameObject.SetActive(true);
 	}
 
+	/// Returns if the card is currently in an important move state that is not a hover animation.
 	public bool GetBusy() {
 		return (moving && !hovering && !dehovering);
 	}
