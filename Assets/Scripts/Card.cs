@@ -2,28 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// enum CardType {
-// 	Melee,
-// 	Ranged,
-// 	Defense,
-// 	White,
-// 	Black
-// };
-
 /// Basic card characteristics
 public abstract class Card : MonoBehaviour {
-
-    //Particle effects
-    ParticleSystemController ParticleController;
-
-    public IEnumerator showParticles()
-    {
-        if(ParticleController!=null)
-        {
-             yield return ParticleController.Explode();
-        }
-        yield break;
-    }
 
 	/// Called when a card is used. NOT when a card is played on the board.
     public abstract IEnumerator Use();
@@ -32,15 +12,6 @@ public abstract class Card : MonoBehaviour {
 	[SerializeField]
 	protected int cost;
 	public int GetCost() { return cost; }
-
-	/// True if the card is on the board
-	public bool onBoard = false;
-
-	/// True if the card is in the deck
-	public bool inDeck = true;
-
-	/// Type of the card (not implemented)
-	CardType cardType;
 
 	/// Text mesh of the title.
 	public TextMesh titleText;
@@ -60,25 +31,16 @@ public abstract class Card : MonoBehaviour {
 	/// The character using the card
 	public Character holder { get; private set; }
 
-	/// The character opposite the holder. Target
-	public Character target { get; private set; }
-
 	/// Position of the card on the board before it is moved for hover animation.
-	Vector3 positionBeforeHover;
+	Vector3 previousPosition;
 	/// Rotation of the card on the board before it is moved by a hover animation.
-	Quaternion rotationBeforeHover;
+	Quaternion previousRotation;
 
-	/// The current hover or dehover routine.	
-	Coroutine hoverCoroutine;
+	/// The current movement coroutine	
+	Coroutine currentMovementCoroutine;
 
-	/// True if the card is currently moving.
-	bool moving = false;
-
-	/// Although hovering is considered moving, it can be interrupted be re-hovering, so it needs to be stored.
-	bool hovering = false;
-
-	/// Although dehovering is considered moving, it can be interrupted be re-hovering, so it needs to be stored.
-	bool dehovering = false;
+	/// True when the card cannot be played or viewed.
+	bool busy;
 
 	/// True while the player is dragging a card
 	bool grabbing = false;
@@ -87,35 +49,22 @@ public abstract class Card : MonoBehaviour {
 	public int phaseIndex = -1;
 
 	/// Hovers the card so the player can see it better.
-	public virtual IEnumerator Hover() {
-		if (moving && !hovering) {
-			yield break;
-		}
-		hovering = true;
-		dehovering = false;
-		if (hoverCoroutine != null) {
-			transform.position = positionBeforeHover;
-			transform.rotation = rotationBeforeHover;
-		} else {
-			positionBeforeHover = transform.position;
-			rotationBeforeHover = transform.rotation;
+	private virtual IEnumerator Hover() {
+		if (currentMovementCoroutine != null) {
+			transform.position = previousPosition;
+			transform.rotation = previousRotation;
 		}
 		if (hoverCoroutine != null) {
 			StopCoroutine(hoverCoroutine);
 			// deHovering = false;
 		}
-		Vector3 desiredPosition;
-		if (onBoard) {
-			desiredPosition = transform.position + Vector3.up * 2f;
-		} else {
-			desiredPosition = transform.position + new Vector3(0f, 5f, 4f);
-		}
+		Vector3 desiredPosition = transform.position + Vector3.up * 2f;
 		hoverCoroutine = StartCoroutine(LerpTransform(desiredPosition, Quaternion.identity, 2f));
 		yield return hoverCoroutine;
 	}
 
 	/// Dehovers the card.
-	public virtual IEnumerator DeHover() {
+	private virtual IEnumerator DeHover() {
 		if (moving && !hovering) {
 			yield break;
 		}
@@ -131,66 +80,14 @@ public abstract class Card : MonoBehaviour {
 		hoverCoroutine = null;
 	}
 
-	/// Used for position a card on the board.
-	public IEnumerator PositionOnBoard() {
-		// Shift the card slightly based on how many other cards are in the same phase slot.
-		Vector3 desiredPosition = GameController.currentBoard.phasePositions[phaseIndex].transform.position + new Vector3(0f, 0.3f, -0.8f) * (GameController.currentBoard.GetCardCount(holder, phaseIndex)-1);
-		Quaternion desiredRotation = GameController.currentBoard.phasePositions[phaseIndex].transform.rotation;
-		yield return StartCoroutine(SmoothTransform(desiredPosition, desiredRotation));
-	}
-
-	/// Marks a card to be destroyed at the end of the turn.
-	public void DestroyAtEndOfTurn() {
-		Board.endTurn += StartDestroyAnimation;
-	}
-
-	/// Start the destruction process of the card.
-	public virtual void StartDestroyAnimation() {
-		Board.endTurn -= StartDestroyAnimation;
-		StartCoroutine(Destroy());
-	}
-
-	/// If a player card, add it to Board.destroyed cards so it can be put back into the player's deck at the end of the game. 
-	/// Else, destroy it.
-	public virtual IEnumerator Destroy() {
-		GameController.currentBoard.RemoveCard(this, phaseIndex);
-		if (holder.player) {
-			Board.destroyedCards.Add(this);
-			gameObject.SetActive(false);
-		} else {
-			Destroy(gameObject);
-		}
-		yield break; //TODO destruction animation	
-	}
-
-	/// Called when an character dies only.
-	public void ForceDestroy() {
-		Destroy(gameObject);
-	}
-
 	/// Slerps the card's transform to a given transform over time. Speed of 1 is default.
-	private IEnumerator LerpTransform (Transform desiredTransform, float speed = 1f) {
-		moving = true;
-		while (transform.rotation != desiredTransform.rotation || transform.position != desiredTransform.position) {
-			float deltaTime = Time.deltaTime * 5f * speed;
-			transform.rotation = Quaternion.Slerp(transform.rotation, desiredTransform.rotation, deltaTime);
-			transform.position = Vector3.Slerp(transform.position, desiredTransform.position, deltaTime);
-			transform.localScale = Vector3.Slerp(transform.localScale, desiredTransform.localScale, deltaTime);
-			if (Quaternion.Angle(transform.rotation, desiredTransform.rotation) < 10f) {
-				transform.rotation = desiredTransform.rotation;
-			}
-			if (Vector3.Distance(transform.position, desiredTransform.position) < 1f) {
-				transform.position = desiredTransform.position;
-			}
-			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
-			yield return null;
-		}
-		moving = false;
+	private IEnumerator LerpTransform (Transform desiredTransform, bool interuptable = false, float speed = 1f) {
+		yield return StartCoroutine(LerpTransform(desiredTransform.position, desiredTransform.rotation, interuptable, speed))
 	}
 
 	/// Slerps the card's transofrm to a given transform over time. Speed of 1 is default.
-	private IEnumerator LerpTransform (Vector3 desiredPosition, Quaternion desiredRotation, float speed = 1f) {
-		moving = true;
+	private IEnumerator LerpTransform (Vector3 desiredPosition, Quaternion desiredRotation, bool interuptable, float speed = 1f) {
+		busy = !interuptable;
 		while (transform.rotation != desiredRotation || transform.position != desiredPosition) {
 			float deltaTime = Time.deltaTime * 5f * speed;
 			transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, deltaTime);
@@ -204,7 +101,7 @@ public abstract class Card : MonoBehaviour {
 			// transform.localScale = desiredTransform.localScale;//TODO scale almost finished scaling check (if we decide to use it)
 			yield return null;
 		}
-		moving = false;
+		busy = false;
 	}
 
 	/// Moves the card to a certain position over time. Speed of 1 is default.
@@ -219,44 +116,6 @@ public abstract class Card : MonoBehaviour {
 			yield return null;
 		}
 		moving = false;
-	}
-
-	/// Smoothly move the card to desired position.
-	public IEnumerator SmoothMove (Vector3 desiredPosition, float speed = 1f) {
-		hovering = false;
-		dehovering = false;
-		if (hoverCoroutine != null) {
-			StopCoroutine(hoverCoroutine);
-			hoverCoroutine = null;
-			transform.position = positionBeforeHover;
-		}
-		yield return StartCoroutine(LerpPosition(desiredPosition, speed));
-	}
-
-	/// Smoothly transform the card to the desired position.
-	public IEnumerator SmoothTransform (Transform desiredTransform, float speed = 1f) {
-		hovering = false;
-		dehovering = false;
-		if (hoverCoroutine != null) {
-			StopCoroutine(hoverCoroutine);
-			hoverCoroutine = null;
-			transform.position = positionBeforeHover;
-			transform.rotation = rotationBeforeHover;
-		}
-		yield return StartCoroutine(LerpTransform(desiredTransform, speed));
-	}
-
-	/// Smoothly transform the card to the desired position.
-	public IEnumerator SmoothTransform (Vector3 desiredPosition, Quaternion desiredRotation, float speed = 1f) {
-		hovering = false;
-		dehovering = false;
-		if (hoverCoroutine != null) {
-			StopCoroutine(hoverCoroutine);
-			hoverCoroutine = null;
-			transform.position = positionBeforeHover;
-			transform.rotation = rotationBeforeHover;
-		}
-		yield return StartCoroutine(LerpTransform(desiredPosition, desiredRotation, speed));
 	}
 
 	protected virtual void Awake() {
