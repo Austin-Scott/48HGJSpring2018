@@ -10,27 +10,24 @@ public class Deck {
 	/// the board the deck is on
 	Board board;
 
-	/// True if this deck belongs to the player
-	bool player;
-
-	/// target
-	Character target;
+	// /// target
+	// DeckHolder target;
 
 	/// holder
-	Character holder;
+	DeckHolder holder;
 
 	/// removes the last card in the deck and returns it.
 	public Card Draw() {
 		int lastCardIndex = cards.Count - 1;
-		if (lastCardIndex < 0) {
-			Card newCard = GameController.CreateCard(typeof(CardPunch));
-			cards.Add(newCard);
-			Initialize(holder, target, board, player);
-			return Draw();
-		}
+		// if (lastCardIndex < 0) {
+		// 	Card newCard = GameController.CreateCard(typeof(CardPunch));
+		// 	cards.Add(newCard);
+		// 	Initialize(holder, target, board, player);
+		// 	return Draw();
+		// }
 		Card card = cards[lastCardIndex];
 		cards.RemoveAt(lastCardIndex);
-		card.inDeck = false;
+		// card.inDeck = false;
 		return card;
 	}
 
@@ -56,57 +53,18 @@ public class Deck {
         return false;
     }
 
-	/// Positions the deck in it corresponding deck position.
-	public IEnumerator PositionDeck() {
-		Coroutine[] movementCoroutines = new Coroutine[cards.Count];
-		Transform deckLocation;
-		if (player) {
-			deckLocation = board.playerDeckPosition;
-		} else {
-			deckLocation = board.enemyDeckPosition;
-		}
-		Vector3 deckPosition = deckLocation.position;
-
-        //For each card in this deck, stack them into their character's deck
-		for (int i = 0; i < cards.Count; i++) {
-			movementCoroutines[i] = GameController.ControllerCoroutine(cards[i].SmoothTransform(deckPosition, deckLocation.rotation));
-			deckPosition.y += 0.3f;
-		}
-		// Wait for all cards to be positioned before exiting coroutine.
-		foreach (Coroutine coroutine in movementCoroutines) {
-			yield return coroutine;
-		}
-
-	}
-
 	/// Sets the cards friendy and target properties.
-	public void Initialize(Character holder, Character target, Board board, bool player) {
+	public void Initialize(DeckHolder holder, Board board) {
 		this.holder = holder;
-		this.target = target;
 		this.board = board;
-		this.player = player;
 		foreach (Card card in cards) {
-			card.Initialize(holder, target);
+			card.Initialize(holder);
 		}
 	}
 
 	/// Adds a card to the deck.
 	public void AddCard(Card card) {
 		cards.Add(card);
-	}
-
-	/// Destroys all cards in the deck. Called when a character dies.
-	public void DestroyAllCards() {
-		foreach (Card card in cards) {
-			card.ForceDestroy();
-		}
-	}
-
-	/// Adds quantity of new instances of cards to the deck of type.
-	public void AddNewCards(System.Type cardType, int quantity) {
-		for (int i = 0; i < quantity; i++) {
-			AddCard(GameController.CreateCard(cardType));
-		}
 	}
 
 	/// Shuffles the deck by randomly switching cards 100 times.
