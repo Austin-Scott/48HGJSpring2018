@@ -1,2 +1,7 @@
-# 48HGJSpring2018
-Jam game made for the UW-Stout's Spring 2018 48 Hour Game Jam
+# Hand Of Life
+
+Each hexogonal tile is a gameboard, consisting of several cards and up to one deck holder. Deck holder travel between tiles, and their cards in hand and in deck are both carried with them. Any cards they pickup or place down are not. Every tile will have at least one card in it which describes the material of the tile. For example, in a desert terrain, every tile will have a sand card. In fact, every tile will have several material more likely, such as stone or ores buried under the tile. These entities are not visible to the player, so like all non-visible cards, they will be represented as a face down deck of cards.
+
+A rough mesh of terrain tiles will be made based on the material cards. Every tile will then have a deck of cards facing down, with a single card facing up. This one card will be the most important card in the tile. If the tile has a deck holder, the deck holder's card will be show. If not, the primary material card visible to the player will be show.
+
+The tile the player is actually on will look more like a traditional card game board, with cards arranged rectangularly giving more detail about the tile then the "at a glance" view of other tiles. When mousing over other tiles, additional cards that the deck holder can see should be show arranged in a simular fashion.
